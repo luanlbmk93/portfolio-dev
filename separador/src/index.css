@@ -1,0 +1,59 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  :root {
+    /* Palette (matches requested hex theme) */
+    /* Background: #0F1117 */
+    --background: 225 21% 7%;
+    --foreground: 0 0% 100%;
+
+    /* Card: #171A22 */
+    --card: 226 19% 11%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 226 19% 11%;
+    --popover-foreground: 0 0% 100%;
+
+    /* CTA green: #00E676 */
+    --primary: 151 100% 45%;
+    --primary-foreground: 225 21% 7%;
+
+    --secondary: 226 18% 14%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 226 18% 14%;
+    /* Secondary text: #A0A7B4 */
+    --muted-foreground: 219 12% 67%;
+
+    /* Accent follows warm gradient family */
+    --accent: 354 100% 69%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 226 17% 18%;
+    --input: 226 17% 18%;
+    --ring: 151 100% 45%;
+
+    --radius: 18px;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "ss01" 1, "ss02" 1, "cv01" 1, "cv02" 1;
+  }
+}
+

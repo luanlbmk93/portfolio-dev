@@ -1,0 +1,14 @@
+FROM node:20-alpine
+WORKDIR /app
+
+COPY disparador-gmail/server/package.json disparador-gmail/server/package-lock.json ./
+RUN npm ci --omit=dev
+
+COPY disparador-gmail/server/ ./
+
+ENV NODE_ENV=production
+ENV PORT=3100
+ENV BASE_PATH=/disparador-gmail
+
+EXPOSE 3100
+CMD ["node", "index.js"]

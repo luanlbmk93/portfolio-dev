@@ -1,0 +1,17 @@
+node_modules/
+dist/
+client/dist/
+portfolio/dist/
+
+.env
+.env.*
+!.env.example
+
+credentials.json
+credentials.json.json
+token.json
+lista*.json
+
+*.log
+.DS_Store
+*.local

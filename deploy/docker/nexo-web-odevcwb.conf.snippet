@@ -1,0 +1,29 @@
+# Cole DENTRO do nexo-web — NÃO substitua o config do Nexo.
+# Descubra onde montar: docker exec nexo-web ls /etc/nginx/conf.d/
+#
+# SSL: use certbot no nexo-web ou reutilize certificados existentes.
+# Ajuste ssl_certificate se necessário.
+
+server {
+    listen 443 ssl http2;
+    server_name odevcwb.com www.odevcwb.com;
+
+    # Exemplo Let's Encrypt — ajuste caminhos reais dentro do container nexo-web
+    ssl_certificate     /etc/letsencrypt/live/odevcwb.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/odevcwb.com/privkey.pem;
+
+    location / {
+        proxy_pass http://odevcwb-web:80;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+server {
+    listen 80;
+    server_name odevcwb.com www.odevcwb.com;
+    return 301 https://$host$request_uri;
+}
