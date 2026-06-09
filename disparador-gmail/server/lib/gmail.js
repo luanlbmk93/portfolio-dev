@@ -1,6 +1,9 @@
 import { google } from 'googleapis';
 
-const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
+const SCOPES = [
+  'https://www.googleapis.com/auth/gmail.send',
+  'https://www.googleapis.com/auth/userinfo.email',
+];
 
 export function createOAuthClient() {
   const clientId = process.env.GOOGLE_CLIENT_ID;

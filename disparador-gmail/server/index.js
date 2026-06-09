@@ -162,8 +162,15 @@ api.get('/auth/callback', async (req, res) => {
   try {
     const tokens = await exchangeCodeForTokens(code);
     req.session.tokens = tokens;
-    req.session.userEmail = await getUserEmail(tokens);
     req.session.smtpAuth = null;
+
+    try {
+      req.session.userEmail = await getUserEmail(tokens);
+    } catch (userinfoErr) {
+      console.error('[oauth callback] userinfo:', userinfoErr.message);
+      req.session.userEmail = null;
+    }
+
     req.session.save((saveErr) => {
       if (saveErr) {
         console.error('[oauth callback] session save:', saveErr.message);
