@@ -55,9 +55,12 @@ export default function App() {
       window.history.replaceState({}, '', window.location.pathname);
       refreshAuth();
     } else if (authParam === 'error') {
+      const reason = params.get('reason');
       setAlert({
         type: 'error',
-        message: 'Falha no login OAuth. Use email + senha de app abaixo.',
+        message: reason
+          ? `OAuth falhou: ${decodeURIComponent(reason)}. Use email + senha de app abaixo.`
+          : 'OAuth falhou. Use email + senha de app (não precisa estar no console Google).',
       });
       window.history.replaceState({}, '', window.location.pathname);
     }

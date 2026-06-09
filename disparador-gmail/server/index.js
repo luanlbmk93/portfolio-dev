@@ -165,8 +165,9 @@ api.get('/auth/callback', async (req, res) => {
     req.session.userEmail = await getUserEmail(tokens);
     req.session.smtpAuth = null;
     res.redirect(`${BASE_PATH}/?auth=success`);
-  } catch {
-    res.redirect(`${BASE_PATH}/?auth=error`);
+  } catch (err) {
+    const reason = encodeURIComponent(err.message ?? 'callback_failed');
+    res.redirect(`${BASE_PATH}/?auth=error&reason=${reason}`);
   }
 });
 
