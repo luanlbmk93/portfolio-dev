@@ -6,8 +6,8 @@ services:
     volumes:
       - ./nginx-odevcwb-internal.conf:/etc/nginx/conf.d/default.conf:ro
       - ./portfolio/dist:/usr/share/nginx/html/portfolio:ro
-      - ./separador/dist:/usr/share/nginx/html/separador:ro
-      - ./disparador-gmail/client/dist:/usr/share/nginx/html/disparador:ro
+      - ./separador/dist:/usr/share/nginx/html/separadorpdf:ro
+      - ./disparador-gmail/client/dist:/usr/share/nginx/html/disparador-gmail:ro
     networks:
       - nexo
     # NÃO publica 80/443 no host — só na rede Docker (nexo-web faz o proxy)

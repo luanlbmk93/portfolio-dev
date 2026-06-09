@@ -57,7 +57,7 @@ export default function App() {
     } else if (authParam === 'error') {
       setAlert({
         type: 'error',
-        message: 'Falha no OAuth. Use email + senha de app abaixo.',
+        message: 'Falha no login OAuth. Use email + senha de app abaixo.',
       });
       window.history.replaceState({}, '', window.location.pathname);
     }
