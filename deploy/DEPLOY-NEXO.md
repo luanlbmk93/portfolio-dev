@@ -106,8 +106,9 @@ Google Cloud → OAuth Web → redirect URI acima.
 ```bash
 cd /root/odevcwb
 
-# Troque se o passo 1 mostrou outro nome de rede
-export NEXO_DOCKER_NETWORK=docker_default
+# OBRIGATÓRIO: mesma rede do nexo-web (senão = 502 Bad Gateway)
+cp /root/odevcwb-src/deploy/docker/compose.env .env
+# ou: bash /root/odevcwb-src/deploy/docker/fix-502.sh
 
 docker compose build odevcwb-api
 docker compose up -d
@@ -192,8 +193,30 @@ Aponte `odevcwb.com` e `www.odevcwb.com` para o IP da VPS.
 ```bash
 # rebuild local, reenviar dists, na VPS:
 cd /root/odevcwb
+cp /root/odevcwb-src/deploy/docker/compose.env .env   # não pule isso
 docker compose up -d --build odevcwb-api
 docker compose restart odevcwb-web
+```
+
+## 502 Bad Gateway
+
+Significa que o **nexo-web** não alcança o **odevcwb-web** (container parado ou rede Docker errada).
+
+```bash
+cd /root/odevcwb-src && git pull
+bash /root/odevcwb-src/deploy/docker/fix-502.sh
+```
+
+Ou manualmente:
+
+```bash
+docker ps -a | grep odevcwb
+docker inspect nexo-web --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{end}}'
+# Use o nome da rede acima:
+cd /root/odevcwb
+echo 'NEXO_DOCKER_NETWORK=nexo_default' > .env   # troque se for outro nome
+docker compose down && docker compose up -d
+docker exec nexo-web wget -qO- http://odevcwb-web/ | head -3
 ```
 
 ---
