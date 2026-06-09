@@ -2,7 +2,7 @@
   "name": "odevcwb-apps",
   "private": true,
   "scripts": {
-    "install:disparador": "npm install --prefix disparador-gmail && npm run install:all --prefix disparador-gmail",
+    "install:disparador": "npm install --prefix disparador-gmail/client && npm install --prefix disparador-gmail/server",
     "build:portfolio": "npm run build --prefix \"portfolio pessoal\"",
     "build:separador": "cross-env VITE_BASE=/separadorpdf/ npm run build --prefix separador",
     "build:disparador-client": "npm run build --prefix disparador-gmail/client",
