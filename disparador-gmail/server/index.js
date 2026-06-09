@@ -52,7 +52,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production' ? 'auto' : false,
       sameSite: 'lax',
       path: BASE_PATH || '/',
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -92,12 +92,19 @@ api.get('/auth/status', async (req, res) => {
 
   try {
     const email = req.session.userEmail ?? (await getUserEmail(req.session.tokens));
-    req.session.userEmail = email;
-    res.json({ connected: true, email, method: 'oauth' });
-  } catch {
-    req.session.tokens = null;
-    req.session.userEmail = null;
-    res.json({ connected: false, oauthEnabled: OAUTH_ENABLED });
+    if (email) req.session.userEmail = email;
+    res.json({
+      connected: true,
+      email: email ?? req.session.userEmail ?? 'Gmail conectado',
+      method: 'oauth',
+    });
+  } catch (err) {
+    console.error('[auth/status] userinfo:', err.message);
+    res.json({
+      connected: true,
+      email: req.session.userEmail ?? 'Gmail conectado',
+      method: 'oauth',
+    });
   }
 });
 

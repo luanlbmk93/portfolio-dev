@@ -31,12 +31,16 @@ export default function App() {
   const [recipientsText, setRecipientsText] = useState(DEFAULT_RECIPIENTS);
   const [delayMs, setDelayMs] = useState(5000);
 
-  const refreshAuth = useCallback(async () => {
+  const refreshAuth = useCallback(async (retries = 0) => {
     setLoadingAuth(true);
     try {
-      const status = await getAuthStatus();
-      setAuth(status);
-      setOauthEnabled(Boolean(status.oauthEnabled));
+      for (let attempt = 0; attempt <= retries; attempt += 1) {
+        const status = await getAuthStatus();
+        setAuth(status);
+        setOauthEnabled(Boolean(status.oauthEnabled));
+        if (status.connected || attempt === retries) break;
+        await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
+      }
     } catch {
       setAuth({ connected: false });
     } finally {
@@ -45,15 +49,13 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    refreshAuth();
-
     const params = new URLSearchParams(window.location.search);
     const authParam = params.get('auth');
 
     if (authParam === 'success') {
       setAlert({ type: 'success', message: 'Conta Google conectada com sucesso!' });
       window.history.replaceState({}, '', window.location.pathname);
-      refreshAuth();
+      refreshAuth(4);
     } else if (authParam === 'error') {
       const reason = params.get('reason');
       setAlert({
@@ -63,6 +65,9 @@ export default function App() {
           : 'OAuth falhou. Entre com um Gmail que está em Usuários de teste no Google Cloud.',
       });
       window.history.replaceState({}, '', window.location.pathname);
+      refreshAuth();
+    } else {
+      refreshAuth();
     }
   }, [refreshAuth]);
 
