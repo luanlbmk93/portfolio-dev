@@ -242,3 +242,15 @@ button:not(:disabled):hover {
 .field-row input {
   max-width: 420px;
 }
+
+.auth-form {
+  margin-top: 12px;
+}
+
+.auth-form .actions {
+  margin-top: 8px;
+}
+
+.card a {
+  color: var(--green);
+}

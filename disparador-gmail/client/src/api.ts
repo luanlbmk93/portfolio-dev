@@ -16,7 +16,19 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return data as T;
 }
 
-export type AuthStatus = { connected: boolean; email?: string };
+export type AuthStatus = {
+  connected: boolean;
+  email?: string;
+  method?: 'smtp' | 'oauth';
+  oauthEnabled?: boolean;
+};
+
+export function connectSmtp(body: { email: string; appPassword: string }) {
+  return request<{ ok: boolean; email: string }>('/auth/smtp', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+}
 
 export type SendResult = {
   total: number;

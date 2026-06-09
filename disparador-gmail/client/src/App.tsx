@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
+  connectSmtp,
   getAuthStatus,
   logout,
   sendEmails,
@@ -14,12 +15,16 @@ export default function App() {
   const [auth, setAuth] = useState<{ connected: boolean; email?: string }>({
     connected: false,
   });
+  const [oauthEnabled, setOauthEnabled] = useState(false);
   const [loadingAuth, setLoadingAuth] = useState(true);
   const [connecting, setConnecting] = useState(false);
   const [sending, setSending] = useState(false);
   const [alert, setAlert] = useState<Alert | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [sendSummary, setSendSummary] = useState<SendResult | null>(null);
+
+  const [gmailEmail, setGmailEmail] = useState('');
+  const [appPassword, setAppPassword] = useState('');
 
   const [subject, setSubject] = useState(DEFAULT_SUBJECT);
   const [htmlTemplate, setHtmlTemplate] = useState(DEFAULT_HTML);
@@ -31,6 +36,7 @@ export default function App() {
     try {
       const status = await getAuthStatus();
       setAuth(status);
+      setOauthEnabled(Boolean(status.oauthEnabled));
     } catch {
       setAuth({ connected: false });
     } finally {
@@ -49,12 +55,34 @@ export default function App() {
       window.history.replaceState({}, '', window.location.pathname);
       refreshAuth();
     } else if (authParam === 'error') {
-      setAlert({ type: 'error', message: 'Falha ao conectar com o Google. Tente novamente.' });
+      setAlert({
+        type: 'error',
+        message: 'Falha no OAuth. Use email + senha de app abaixo.',
+      });
       window.history.replaceState({}, '', window.location.pathname);
     }
   }, [refreshAuth]);
 
-  async function handleConnect() {
+  async function handleSmtpConnect(e: React.FormEvent) {
+    e.preventDefault();
+    setConnecting(true);
+    setAlert(null);
+    try {
+      const result = await connectSmtp({ email: gmailEmail, appPassword });
+      setAuth({ connected: true, email: result.email });
+      setAppPassword('');
+      setAlert({ type: 'success', message: `Conectado: ${result.email}` });
+    } catch (err) {
+      setAlert({
+        type: 'error',
+        message: err instanceof Error ? err.message : 'Erro ao conectar.',
+      });
+    } finally {
+      setConnecting(false);
+    }
+  }
+
+  async function handleOAuthConnect() {
     setConnecting(true);
     setAlert(null);
     try {
@@ -62,7 +90,7 @@ export default function App() {
     } catch (err) {
       setAlert({
         type: 'error',
-        message: err instanceof Error ? err.message : 'Erro ao iniciar login.',
+        message: err instanceof Error ? err.message : 'Erro ao iniciar OAuth.',
       });
       setConnecting(false);
     }
@@ -117,8 +145,8 @@ export default function App() {
       <header className="header">
         <h1>Disparador Gmail</h1>
         <p>
-          Conecte sua conta Google, cole a lista de destinatários e o HTML do email.
-          Cada pessoa envia pela própria conta — sem usar credencial fixa no servidor.
+          Cada pessoa conecta <strong>sua própria conta Gmail</strong> e envia com o limite dela
+          (~500/dia). Cole a lista e o HTML do email.
         </p>
       </header>
 
@@ -127,31 +155,73 @@ export default function App() {
       <section className="card">
         <div className="auth-bar">
           <div>
-            <h2>Conta Google</h2>
-            <p className="hint">OAuth 2.0 — o email sai da conta conectada.</p>
-          </div>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            {loadingAuth ? (
-              <span className="auth-status">Verificando...</span>
-            ) : auth.connected ? (
-              <>
-                <span className="auth-status connected">Conectado: {auth.email}</span>
-                <button type="button" className="btn-secondary" onClick={handleLogout}>
-                  Desconectar
-                </button>
-              </>
-            ) : (
-              <button
-                type="button"
-                className="btn-google"
-                onClick={handleConnect}
-                disabled={connecting}
+            <h2>Sua conta Gmail</h2>
+            <p className="hint">
+              Qualquer @gmail.com — use <strong>senha de app</strong> (não a senha normal).
+              <br />
+              <a
+                href="https://myaccount.google.com/apppasswords"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                Conectar com Google
-              </button>
-            )}
+                Criar senha de app no Google →
+              </a>
+              {' '}(precisa de verificação em 2 etapas)
+            </p>
           </div>
         </div>
+
+        {loadingAuth ? (
+          <p className="hint">Verificando...</p>
+        ) : auth.connected ? (
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span className="auth-status connected">Conectado: {auth.email}</span>
+            <button type="button" className="btn-secondary" onClick={handleLogout}>
+              Desconectar
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSmtpConnect} className="auth-form">
+            <div className="field-row">
+              <label htmlFor="gmail">Seu Gmail</label>
+              <input
+                id="gmail"
+                type="email"
+                value={gmailEmail}
+                onChange={(e) => setGmailEmail(e.target.value)}
+                placeholder="seu@gmail.com"
+                required
+              />
+            </div>
+            <div className="field-row">
+              <label htmlFor="appPassword">Senha de app (16 caracteres)</label>
+              <input
+                id="appPassword"
+                type="password"
+                value={appPassword}
+                onChange={(e) => setAppPassword(e.target.value)}
+                placeholder="xxxx xxxx xxxx xxxx"
+                autoComplete="off"
+                required
+              />
+            </div>
+            <div className="actions">
+              <button type="submit" className="btn-primary" disabled={connecting}>
+                {connecting ? 'Conectando...' : 'Conectar Gmail'}
+              </button>
+              {oauthEnabled && (
+                <button
+                  type="button"
+                  className="btn-google"
+                  onClick={handleOAuthConnect}
+                  disabled={connecting}
+                >
+                  OAuth (opcional)
+                </button>
+              )}
+            </div>
+          </form>
+        )}
       </section>
 
       <div className="field-row">
