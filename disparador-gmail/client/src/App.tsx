@@ -59,8 +59,8 @@ export default function App() {
       setAlert({
         type: 'error',
         message: reason
-          ? `OAuth falhou: ${decodeURIComponent(reason)}. Use email + senha de app abaixo.`
-          : 'OAuth falhou. Use email + senha de app (não precisa estar no console Google).',
+          ? `OAuth falhou: ${decodeURIComponent(reason)}. Use o mesmo Gmail cadastrado em Usuários de teste.`
+          : 'OAuth falhou. Entre com um Gmail que está em Usuários de teste no Google Cloud.',
       });
       window.history.replaceState({}, '', window.location.pathname);
     }
@@ -160,16 +160,8 @@ export default function App() {
           <div>
             <h2>Sua conta Gmail</h2>
             <p className="hint">
-              Qualquer @gmail.com — use <strong>senha de app</strong> (não a senha normal).
-              <br />
-              <a
-                href="https://myaccount.google.com/apppasswords"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Criar senha de app no Google →
-              </a>
-              {' '}(precisa de verificação em 2 etapas)
+              Modo teste Google: use <strong>Conectar com Google</strong> com um email que está em
+              Usuários de teste no Console.
             </p>
           </div>
         </div>
@@ -184,46 +176,58 @@ export default function App() {
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSmtpConnect} className="auth-form">
-            <div className="field-row">
-              <label htmlFor="gmail">Seu Gmail</label>
-              <input
-                id="gmail"
-                type="email"
-                value={gmailEmail}
-                onChange={(e) => setGmailEmail(e.target.value)}
-                placeholder="seu@gmail.com"
-                required
-              />
-            </div>
-            <div className="field-row">
-              <label htmlFor="appPassword">Senha de app (16 caracteres)</label>
-              <input
-                id="appPassword"
-                type="password"
-                value={appPassword}
-                onChange={(e) => setAppPassword(e.target.value)}
-                placeholder="xxxx xxxx xxxx xxxx"
-                autoComplete="off"
-                required
-              />
-            </div>
-            <div className="actions">
-              <button type="submit" className="btn-primary" disabled={connecting}>
-                {connecting ? 'Conectando...' : 'Conectar Gmail'}
+          <>
+            <div className="actions" style={{ marginTop: 0 }}>
+              <button
+                type="button"
+                className="btn-google"
+                onClick={handleOAuthConnect}
+                disabled={connecting || !oauthEnabled}
+              >
+                Conectar com Google
               </button>
-              {oauthEnabled && (
-                <button
-                  type="button"
-                  className="btn-google"
-                  onClick={handleOAuthConnect}
-                  disabled={connecting}
-                >
-                  OAuth (opcional)
-                </button>
-              )}
             </div>
-          </form>
+            {!oauthEnabled && (
+              <p className="hint" style={{ color: '#ffb4bb' }}>
+                OAuth não configurado no servidor (.env com Client ID Web).
+              </p>
+            )}
+            <details style={{ marginTop: 16 }}>
+              <summary className="hint" style={{ cursor: 'pointer' }}>
+                Alternativa: senha de app (sem OAuth)
+              </summary>
+              <form onSubmit={handleSmtpConnect} className="auth-form">
+                <div className="field-row">
+                  <label htmlFor="gmail">Seu Gmail</label>
+                  <input
+                    id="gmail"
+                    type="email"
+                    value={gmailEmail}
+                    onChange={(e) => setGmailEmail(e.target.value)}
+                    placeholder="seu@gmail.com"
+                    required
+                  />
+                </div>
+                <div className="field-row">
+                  <label htmlFor="appPassword">Senha de app (16 caracteres)</label>
+                  <input
+                    id="appPassword"
+                    type="password"
+                    value={appPassword}
+                    onChange={(e) => setAppPassword(e.target.value)}
+                    placeholder="xxxx xxxx xxxx xxxx"
+                    autoComplete="off"
+                    required
+                  />
+                </div>
+                <div className="actions">
+                  <button type="submit" className="btn-primary" disabled={connecting}>
+                    {connecting ? 'Conectando...' : 'Conectar com senha de app'}
+                  </button>
+                </div>
+              </form>
+            </details>
+          </>
         )}
       </section>
 

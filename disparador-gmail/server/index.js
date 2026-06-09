@@ -164,8 +164,15 @@ api.get('/auth/callback', async (req, res) => {
     req.session.tokens = tokens;
     req.session.userEmail = await getUserEmail(tokens);
     req.session.smtpAuth = null;
-    res.redirect(`${BASE_PATH}/?auth=success`);
+    req.session.save((saveErr) => {
+      if (saveErr) {
+        console.error('[oauth callback] session save:', saveErr.message);
+        return res.redirect(`${BASE_PATH}/?auth=error&reason=session_save_failed`);
+      }
+      res.redirect(`${BASE_PATH}/?auth=success`);
+    });
   } catch (err) {
+    console.error('[oauth callback]', err.message);
     const reason = encodeURIComponent(err.message ?? 'callback_failed');
     res.redirect(`${BASE_PATH}/?auth=error&reason=${reason}`);
   }

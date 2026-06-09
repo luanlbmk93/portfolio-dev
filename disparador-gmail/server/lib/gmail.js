@@ -25,7 +25,8 @@ export function getAuthUrl() {
 
 export async function exchangeCodeForTokens(code) {
   const oauth2Client = createOAuthClient();
-  const { tokens } = await oauth2Client.getToken(code);
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI;
+  const { tokens } = await oauth2Client.getToken({ code, redirect_uri: redirectUri });
   oauth2Client.setCredentials(tokens);
   return tokens;
 }
