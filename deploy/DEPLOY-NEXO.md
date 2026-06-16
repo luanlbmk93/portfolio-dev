@@ -219,6 +219,27 @@ docker compose down && docker compose up -d
 docker exec nexo-web wget -qO- http://odevcwb-web/ | head -3
 ```
 
+## Nexo parou (site abre, banco/API não funciona)
+
+O stack **Nexo** (`/root/nexo/`) é separado do odevcwb. Nossos scripts **não** apagam postgres do Nexo, mas recriar `nexo-web` ou falta de disco/memória pode derrubar API/worker.
+
+**Diagnóstico (só leitura):**
+
+```bash
+cd /root/odevcwb-src && git pull
+bash /root/odevcwb-src/deploy/docker/diagnose-nexo.sh
+```
+
+**Recuperação segura (só API + worker, sem apagar banco):**
+
+```bash
+bash /root/odevcwb-src/deploy/docker/fix-nexo-safe.sh
+```
+
+**NÃO rode** `docker compose down` em `/root/nexo/` sem saber o que está fazendo — isso derruba postgres e a aplicação inteira.
+
+Cole a saída do `diagnose-nexo.sh` se ainda não voltar.
+
 ---
 
 ## Por que isso não conflita

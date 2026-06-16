@@ -24,6 +24,7 @@ cp /root/odevcwb-src/deploy/docker/docker-compose.yml ./docker-compose.yml
 
 echo ""
 echo "=== Subir stack na rede correta ==="
+echo "(Só para odevcwb — NÃO mexe no Nexo/postgres)"
 docker compose down
 docker compose up -d --build
 
