@@ -41,18 +41,25 @@ cat /root/nexo/infrastructure/docker/docker-compose.prod.yml
 
 ## Passo 2 — Enviar arquivos para a VPS
 
-Na sua máquina, build local:
+Na sua máquina (ou na VPS após `git pull`):
 
 ```bash
-cd "2 PASTAS"
+cd /root/odevcwb-src   # ou "2 PASTAS" no PC
 npm install
-npm run install:disparador
-npm run build
-mkdir -p portfolio
-cp -r "portfolio pessoal/dist" portfolio/dist
+npm run build:portfolio   # build + copia para portfolio/dist
 ```
 
-Envie para a VPS (exemplo):
+Ou na VPS, script pronto:
+
+```bash
+cd /root/odevcwb-src && git pull
+bash deploy/docker/update-portfolio.sh
+```
+
+> **Importante:** o site em produção serve `portfolio/dist/`, **não** o código em `portfolio pessoal/src/`.  
+> `portfolio/dist` está no `.gitignore` — `git pull` sozinho **não** atualiza o site.
+
+Envie para a VPS (exemplo, se buildou no PC):
 
 ```bash
 scp -r "2 PASTAS" root@SEU_IP:/root/odevcwb-src

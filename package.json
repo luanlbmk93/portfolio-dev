@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "install:disparador": "npm install --prefix disparador-gmail/client && npm install --prefix disparador-gmail/server",
-    "build:portfolio": "npm run build --prefix \"portfolio pessoal\"",
+    "build:portfolio": "npm run build --prefix \"portfolio pessoal\" && node scripts/copy-portfolio-dist.cjs",
     "build:separador": "cross-env VITE_BASE=/separadorpdf/ npm run build --prefix separador",
     "build:disparador-client": "npm run build --prefix disparador-gmail/client",
     "build:zelony": "cross-env VITE_BASE=/extrato/ npm run build --prefix zelony-extrato",
