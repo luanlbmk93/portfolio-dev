@@ -4,7 +4,7 @@ import { Contact } from "./components/Contact";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
 import { Nav } from "./components/Nav";
-import { ShaderBackground } from "./components/ShaderBackground";
+import { SiteBackgroundLoader } from "./components/SiteBackgroundLoader";
 import { Stack } from "./components/Stack";
 import { Work } from "./components/Work";
 
@@ -15,8 +15,7 @@ export default function App() {
       <main>
         <Hero />
         <div className="site-body">
-          <ShaderBackground />
-          <div className="bg-grid" aria-hidden />
+          <SiteBackgroundLoader />
           <Dogita />
           <Stack />
           <About />

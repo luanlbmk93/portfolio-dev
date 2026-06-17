@@ -75,22 +75,34 @@ img {
   isolation: isolate;
 }
 
-.site-body > :not(.shader-bg):not(.bg-grid) {
+.site-body > :not(.site-bg):not(.site-bg-sentinel) {
   position: relative;
   z-index: 1;
 }
 
-/* Shader background — Grid Run by @atzedent */
-.shader-bg {
+.site-bg-sentinel {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+/* 3D background — fixed below hero */
+.site-bg {
+  position: fixed;
+  top: 100vh;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background: #000;
+  background: var(--bg);
 }
 
-.shader-bg__canvas {
+.site-bg__canvas {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -98,26 +110,42 @@ img {
   display: block;
 }
 
-.shader-bg__overlay {
+.site-bg__vignette {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
-    radial-gradient(ellipse 100% 70% at 50% 35%, transparent 0%, rgba(5, 7, 12, 0.35) 50%, rgba(5, 7, 12, 0.82) 100%),
-    linear-gradient(180deg, rgba(5, 7, 12, 0.45) 0%, transparent 25%, rgba(5, 7, 12, 0.55) 100%);
+    radial-gradient(ellipse 85% 55% at 50% 38%, transparent 0%, rgba(5, 7, 12, 0.55) 72%),
+    linear-gradient(180deg, rgba(5, 7, 12, 0.92) 0%, transparent 14%, transparent 86%, rgba(5, 7, 12, 0.98) 100%);
 }
 
-/* Background layers */
-.bg-grid {
+.site-bg__glow {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
+  border-radius: 50%;
+  filter: blur(80px);
   opacity: 0.35;
-  background-image:
-    linear-gradient(rgba(57, 255, 20, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57, 255, 20, 0.03) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.site-bg__glow--green {
+  width: 45vw;
+  height: 45vw;
+  max-width: 520px;
+  max-height: 520px;
+  top: 18%;
+  left: -8%;
+  background: radial-gradient(circle, rgba(57, 255, 20, 0.2), transparent 70%);
+}
+
+.site-bg__glow--purple {
+  width: 40vw;
+  height: 40vw;
+  max-width: 480px;
+  max-height: 480px;
+  bottom: 12%;
+  right: -6%;
+  background: radial-gradient(circle, rgba(180, 122, 255, 0.18), transparent 70%);
 }
 
 /* Layout */
