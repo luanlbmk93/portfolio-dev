@@ -1,0 +1,66 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: zelony-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-zelony}
+      POSTGRES_PASSWORD: ${DB_PASS:-zelony}
+      POSTGRES_DB: ${DB_NAME:-zelony_extrato}
+    volumes:
+      - zelony_pg_data:/var/lib/postgresql/data
+      - ./server/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-zelony}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    container_name: zelony-api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      PORT: 3000
+      HOST: 0.0.0.0
+      SERVE_FRONTEND: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+
+  statement:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.statement
+    container_name: zelony-statement
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      CORS_ORIGINS: ${CLIENT_ORIGIN:-http://localhost:5173}
+    ports:
+      - "8000:8000"
+
+  web:
+    image: nginx:1.27-alpine
+    container_name: zelony-web
+    restart: unless-stopped
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./dist:/usr/share/nginx/html:ro
+    depends_on:
+      - api
+      - statement
+    ports:
+      - "8080:80"
+
+volumes:
+  zelony_pg_data:

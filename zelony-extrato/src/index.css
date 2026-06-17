@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-zelony-bg text-zinc-100 antialiased;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply bg-zelony-surface text-zinc-100;
+  }
+
+  ::selection {
+    @apply bg-zelony-gold/30 text-white;
+  }
+}

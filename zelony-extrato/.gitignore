@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+server/node_modules/
+backend/.venv/
+backend/__pycache__/
+**/__pycache__/
+
+# Build
+dist/
+*.local
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Python
+*.pyc
+.venv/
+
+# Misc
+path_
+POSTGRESQL-SERVER/
+extrato-IA.zip
+supabase/
