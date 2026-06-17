@@ -14,8 +14,7 @@ export function Contact() {
           </p>
         </Reveal>
 
-        <Reveal delay={1}>
-          <div className="contact-panel">
+        <div className="contact-panel">
             <h3>git push origin opportunity</h3>
             <p>Respondo rápido. Sem formulário chato — canal direto.</p>
             <div className="contact-links">
@@ -48,7 +47,6 @@ export function Contact() {
               </a>
             </div>
           </div>
-        </Reveal>
       </div>
     </section>
   );

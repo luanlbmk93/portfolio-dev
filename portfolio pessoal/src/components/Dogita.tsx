@@ -9,76 +9,74 @@ export function Dogita() {
           <p className="section-label">flagship</p>
         </Reveal>
 
-        <div className="dogita-hero">
-          <Reveal delay={1}>
-            <div className="dogita-hero-content">
-              <div className="dogita-role-badge">{dogita.role}</div>
-              <h2 className="dogita-title">{dogita.name}</h2>
-              <p className="dogita-subtitle">{dogita.subtitle}</p>
-              <p className="dogita-desc">{dogita.description}</p>
-              <p className="dogita-narrative">{dogita.narrative}</p>
+        <div className="dogita-pin-wrap">
+          <div className="dogita-pin-inner">
+            <div className="dogita-hero">
+              <div className="dogita-hero-content">
+                <div className="dogita-role-badge">{dogita.role}</div>
+                <h2 className="dogita-title">{dogita.name}</h2>
+                <p className="dogita-subtitle">{dogita.subtitle}</p>
+                <p className="dogita-desc">{dogita.description}</p>
+                <p className="dogita-narrative">{dogita.narrative}</p>
 
-              <div className="dogita-actions">
-                <a
-                  href={dogita.links.site}
-                  className="btn btn-primary dogita-btn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  dogita.io →
-                </a>
-                <a
-                  href={dogita.links.whitepaper}
-                  className="btn btn-ghost"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  whitepaper ↗
-                </a>
+                <div className="dogita-actions">
+                  <a
+                    href={dogita.links.site}
+                    className="btn btn-primary dogita-btn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    dogita.io →
+                  </a>
+                  <a
+                    href={dogita.links.whitepaper}
+                    className="btn btn-ghost"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    whitepaper ↗
+                  </a>
+                </div>
+              </div>
+
+              <div className="dogita-metrics-panel">
+                <div className="dogita-metrics-grid">
+                  {dogita.metrics.map((m) => (
+                    <div key={m.label} className="dogita-metric">
+                      <strong>{m.value}</strong>
+                      <span>{m.label}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="dogita-listing">
+                  <span className="dogita-listing-label">listado em</span>
+                  <p>{dogita.listing}</p>
+                </div>
+
+                <div className="dogita-stack-row">
+                  {dogita.techStack.map((t) => (
+                    <span key={t} className="dogita-stack-tag">
+                      {t}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-          </Reveal>
-
-          <Reveal delay={2}>
-            <div className="dogita-metrics-panel">
-              <div className="dogita-metrics-grid">
-                {dogita.metrics.map((m) => (
-                  <div key={m.label} className="dogita-metric">
-                    <strong>{m.value}</strong>
-                    <span>{m.label}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="dogita-listing">
-                <span className="dogita-listing-label">listado em</span>
-                <p>{dogita.listing}</p>
-              </div>
-
-              <div className="dogita-stack-row">
-                {dogita.techStack.map((t) => (
-                  <span key={t} className="dogita-stack-tag">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Reveal>
+          </div>
         </div>
 
         <Reveal delay={1}>
           <h3 className="dogita-modules-title">O que construí — stack técnica</h3>
         </Reveal>
 
-        <div className="dogita-modules-grid">
-          {dogita.modules.map((m, i) => (
-            <Reveal key={m.title} delay={(Math.min(i, 3)) as 0 | 1 | 2 | 3}>
-              <article className="dogita-module">
-                <span className="dogita-module-icon">{m.icon}</span>
-                <h4>{m.title}</h4>
-                <p>{m.desc}</p>
-              </article>
-            </Reveal>
+        <div className="dogita-modules-grid gsap-stagger-group">
+          {dogita.modules.map((m) => (
+            <article key={m.title} className="dogita-module gsap-stagger-item">
+              <span className="dogita-module-icon">{m.icon}</span>
+              <h4>{m.title}</h4>
+              <p>{m.desc}</p>
+            </article>
           ))}
         </div>
 
