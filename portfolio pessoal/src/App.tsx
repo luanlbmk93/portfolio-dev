@@ -10,22 +10,21 @@ import { Work } from "./components/Work";
 
 export default function App() {
   return (
-    <>
-      <ShaderBackground />
-      <div className="bg-grid" aria-hidden />
-
-      <div className="app">
-        <Nav />
-        <main>
-          <Hero />
+    <div className="app">
+      <Nav />
+      <main>
+        <Hero />
+        <div className="site-body">
+          <ShaderBackground />
+          <div className="bg-grid" aria-hidden />
           <Dogita />
           <Stack />
           <About />
           <Work />
           <Contact />
-        </main>
-        <Footer />
-      </div>
-    </>
+          <Footer />
+        </div>
+      </main>
+    </div>
   );
 }

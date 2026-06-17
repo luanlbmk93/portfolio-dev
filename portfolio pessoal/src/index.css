@@ -69,9 +69,20 @@ img {
   display: block;
 }
 
+/* Shader + grid — only below hero (.site-body) */
+.site-body {
+  position: relative;
+  isolation: isolate;
+}
+
+.site-body > :not(.shader-bg):not(.bg-grid) {
+  position: relative;
+  z-index: 1;
+}
+
 /* Shader background — Grid Run by @atzedent */
 .shader-bg {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
@@ -97,10 +108,10 @@ img {
 
 /* Background layers */
 .bg-grid {
-  position: fixed;
+  position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
   opacity: 0.35;
   background-image:
     linear-gradient(rgba(57, 255, 20, 0.03) 1px, transparent 1px),
@@ -259,12 +270,14 @@ img {
   transition: transform 0.3s, opacity 0.3s;
 }
 
-/* Hero */
+/* Hero — parallax only, no shader */
 .hero {
   position: relative;
+  z-index: 1;
   min-height: 160vh;
   padding-top: var(--nav-h);
   padding-bottom: 4rem;
+  background: var(--bg);
 }
 
 .hero-parallax {
@@ -288,9 +301,9 @@ img {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(5, 7, 12, 0.35) 0%,
-    rgba(5, 7, 12, 0.15) 45%,
-    rgba(5, 7, 12, 0.75) 85%,
+    rgba(5, 7, 12, 0.2) 0%,
+    transparent 40%,
+    rgba(5, 7, 12, 0.5) 80%,
     var(--bg) 100%
   );
 }

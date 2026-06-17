@@ -3,11 +3,13 @@ import { GRID_RUN_FRAGMENT } from "../shaders/gridRun";
 import { PointerTracker, ShaderRenderer } from "../lib/webglShader";
 
 export function ShaderBackground() {
+  const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const wrap = wrapRef.current;
+    if (!canvas || !wrap) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
@@ -26,22 +28,24 @@ export function ShaderBackground() {
       return;
     }
 
-    const size = () => ({
-      width: window.innerWidth,
-      height: window.innerHeight,
+    const measure = () => ({
+      width: wrap.clientWidth,
+      height: wrap.clientHeight,
       dpr,
     });
 
-    const pointers = new PointerTracker(size);
+    const pointers = new PointerTracker(measure);
     pointers.bind(window);
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.5);
       renderer?.setDpr(dpr);
-      renderer?.resize(window.innerWidth, window.innerHeight);
+      renderer?.resize(wrap.clientWidth, wrap.clientHeight);
     };
 
     resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(wrap);
     window.addEventListener("resize", resize);
 
     const loop = (now: number) => {
@@ -54,13 +58,14 @@ export function ShaderBackground() {
 
     return () => {
       cancelAnimationFrame(frame);
+      ro.disconnect();
       window.removeEventListener("resize", resize);
       renderer?.dispose();
     };
   }, []);
 
   return (
-    <div className="shader-bg" aria-hidden>
+    <div className="shader-bg" ref={wrapRef} aria-hidden>
       <canvas ref={canvasRef} className="shader-bg__canvas" />
       <div className="shader-bg__overlay" />
     </div>
