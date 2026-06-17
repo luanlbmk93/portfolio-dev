@@ -1,20 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-// CORREÇÃO: Unificando todos os ícones em um único import
-import { 
-  Upload, 
-  Search, 
-  X, 
-  Filter, 
-  BarChart3, 
-  ArrowLeftRight, 
-  FileText,
-  Plus,
-  FileSpreadsheet,
-  Lock,
-  Sparkles,
-  MessageCircle
-} from 'lucide-react';
 import { analyzeStatement } from "../services/gemini";
 import { analyzeStatement as analyzeStatementNoAI } from "../services/statement";
 import jsPDF from "jspdf";
@@ -29,7 +14,6 @@ import {
 import { CreditsFooter } from "./CreditsFooter";
 import { AppNav } from "./AppNav";
 import { apiPath, appBase } from "../lib/paths";
-import { publicAsset } from "../lib/asset";
 
 /** Nome exibido: IA + regra “texto após pelo Pix” na mesma linha */
 const resolvedCounterparty = (t: Pick<Transaction, "description" | "counterparty">) =>
@@ -1800,13 +1784,10 @@ useEffect(() => {
     <div className="zelony-card-interactive p-6 sm:p-8 mb-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div>
-          <h2 className="zelony-section-title flex items-center gap-3">
-            <div className="p-2 bg-zelony-brown/20 rounded-lg">
-              <Upload className="w-6 h-6 text-zelony-gold" />
-            </div>
+          <h2 className="zelony-section-title">
             Importar Extrato
           </h2>
-          <div className="pl-11 mt-2 space-y-2 max-w-3xl">
+          <div className="mt-2 space-y-2 max-w-3xl">
             <p className="text-zelony-muted">Envie seu arquivo PDF para processamento</p>
             <p className="text-sm text-zelony-muted">
               Dúvidas ou erro no extrato?{" "}
@@ -1825,7 +1806,7 @@ useEffect(() => {
             </p>
           </div>
 
-          <div className="mt-4 pl-11 flex flex-col gap-3">
+          <div className="mt-4 flex flex-col gap-3">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-wider text-zelony-muted mb-2">
                 Análise com IA
@@ -1839,7 +1820,6 @@ useEffect(() => {
                     : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                 }`}
               >
-                <Sparkles size={16} />
                 Usar IA
               </button>
             </div>
@@ -1855,23 +1835,13 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("nubank");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "nubank"
                       ? "bg-[#8A05BE] text-zelony-bg border-[#8A05BE] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("nubank.png")}
-                      alt="Nubank"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>Nubank</span>
+                  Nubank
                 </button>
                 <button
                   type="button"
@@ -1879,23 +1849,13 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("bradesco");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "bradesco"
                       ? "bg-[#CC092F] text-zelony-bg border-[#CC092F] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("bradesco.png")}
-                      alt="Bradesco"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>Bradesco</span>
+                  Bradesco
                 </button>
                 <button
                   type="button"
@@ -1903,23 +1863,13 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("bancodobrasil");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "bancodobrasil"
                       ? "bg-[#F9C700] text-black border-[#F9C700] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("bancodobrasil.png")}
-                      alt="Banco do Brasil"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>Banco do Brasil</span>
+                  Banco do Brasil
                 </button>
                 <button
                   type="button"
@@ -1927,23 +1877,13 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("inter");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "inter"
                       ? "bg-[#FF7A00] text-zelony-bg border-[#FF7A00] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("inter.png")}
-                      alt="Banco Inter"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>Inter</span>
+                  Inter
                 </button>
                 <button
                   type="button"
@@ -1951,24 +1891,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("santander");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "santander"
                       ? "bg-[#EC0000] text-zelony-bg border-[#EC0000] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Santander (sem IA) — Internet Banking ou Consolidado Inteligente"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("santander.png")}
-                      alt="Santander"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>Santander</span>
+                  Santander
                 </button>
                 <button
                   type="button"
@@ -1976,24 +1906,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("c6");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "c6"
                       ? "bg-[#1A1A1A] text-[#FFD100] border-[#1A1A1A] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="C6 Bank (sem IA)"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("c6.png")}
-                      alt="C6 Bank"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>C6 Bank</span>
+                  C6 Bank
                 </button>
                 <button
                   type="button"
@@ -2001,17 +1921,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("pan");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "pan"
                       ? "bg-[#007DC6] text-zelony-bg border-[#007DC6] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Banco Pan (sem IA)"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-[#007DC6] border border-black/10 flex items-center justify-center text-[10px] font-bold text-zelony-bg">
-                    PAN
-                  </div>
-                  <span>Pan</span>
+                  Pan
                 </button>
                 <button
                   type="button"
@@ -2019,17 +1936,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("pagbank");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "pagbank"
                       ? "bg-[#00A868] text-zelony-bg border-[#00A868] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="PagBank (sem IA)"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-[#00A868] border border-black/10 flex items-center justify-center text-[9px] font-bold text-zelony-bg">
-                    PGB
-                  </div>
-                  <span>PagBank</span>
+                  PagBank
                 </button>
                 <button
                   type="button"
@@ -2037,24 +1951,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("itau");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "itau"
                       ? "bg-[#FF6200] text-zelony-bg border-[#FF6200] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Itaú (sem IA)"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("itau.png")}
-                      alt="Itaú"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>Itaú</span>
+                  Itaú
                 </button>
                 <button
                   type="button"
@@ -2062,24 +1966,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("picpay");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "picpay"
                       ? "bg-[#21C25E] text-zelony-bg border-[#21C25E] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="PicPay (sem IA)"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("picpay.png")}
-                      alt="PicPay"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>PicPay</span>
+                  PicPay
                 </button>
                 <button
                   type="button"
@@ -2087,24 +1981,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("mercadopago");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "mercadopago"
                       ? "bg-[#009EE3] text-zelony-bg border-[#009EE3] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Mercado Pago (sem IA)"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("mercadopago.png")}
-                      alt="Mercado Pago"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>Mercado Pago</span>
+                  Mercado Pago
                 </button>
                 <button
                   type="button"
@@ -2112,24 +1996,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("stone");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "stone"
                       ? "bg-[#0F3D3A] text-zelony-bg border-[#0F3D3A] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Stone (sem IA)"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("stone.png")}
-                      alt="Stone"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>Stone</span>
+                  Stone
                 </button>
                 <button
                   type="button"
@@ -2137,24 +2011,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("sicredi");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "sicredi"
                       ? "bg-[#007A53] text-zelony-bg border-[#007A53] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Sicredi (sem IA)"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("sicredi.png")}
-                      alt="Sicredi"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>Sicredi</span>
+                  Sicredi
                 </button>
                 <button
                   type="button"
@@ -2162,17 +2026,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("caixa");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "caixa"
                       ? "bg-[#005CA9] text-zelony-bg border-[#005CA9] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Caixa Econômica (sem IA — extrato por período)"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-[#005CA9] border border-black/10 flex items-center justify-center text-[10px] font-bold text-zelony-bg">
-                    CEF
-                  </div>
-                  <span>Caixa</span>
+                  Caixa
                 </button>
                 <button
                   type="button"
@@ -2180,24 +2041,14 @@ useEffect(() => {
                     setAnalysisMode("no_ai");
                     setStatementBank("neon");
                   }}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "neon"
                       ? "bg-[#1ED760] text-black border-[#1ED760] shadow-sm"
                       : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Neon (sem IA)"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
-                    <img
-                      src={publicAsset("neon.png")}
-                      alt="Neon"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
-                      }}
-                    />
-                  </div>
-                  <span>Neon</span>
+                  Neon
                 </button>
               </div>
             </div>
@@ -2213,7 +2064,6 @@ useEffect(() => {
               : 'zelony-btn-primary shadow-gold'
             }`}
           >
-            <BarChart3 className="w-5 h-5" /> 
             {showReport ? 'Visualizar tabelas' : 'Gerar relatório analítico'}
           </button>
         )}
@@ -2229,9 +2079,6 @@ useEffect(() => {
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
           />
           <div className="zelony-dropzone h-full min-h-[88px] flex flex-col items-center justify-center gap-2 group-hover:shadow-gold-sm">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zelony-brown/20 border border-zelony-gold/20 text-zelony-gold group-hover:scale-105 transition-transform">
-               <Upload className="w-6 h-6" />
-            </div>
             <span className="text-sm font-medium text-zelony-text-secondary">
               {files.length === 0
                 ? fileHint
@@ -2255,10 +2102,7 @@ useEffect(() => {
                 {loadingText}
               </>
             ) : (
-              <>
-                <Sparkles size={16} />
-                Analisar documento(s)
-              </>
+              'Analisar documento(s)'
             )}
           </span>
         </button>
@@ -2305,14 +2149,12 @@ Analista: {user?.email}
     onClick={downloadExcel}
     className="zelony-btn-secondary !border-emerald-500/30 !text-emerald-400 hover:!bg-emerald-500/10"
   >
-    <FileSpreadsheet className="w-4 h-4" />
     Excel
   </button>
   <button
     onClick={downloadPDF}
     className="zelony-btn-primary"
   >
-    <FileText className="w-4 h-4" />
     PDF
   </button>
 </div>
@@ -2615,12 +2457,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
         {!showReport && transactions.length > 0 && (
           <>
             <div className="zelony-card p-6 mb-6">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="p-2 rounded-lg bg-zelony-brown/20 border border-zelony-gold/20">
-                  <Filter className="w-5 h-5 text-zelony-gold" />
-                </div>
-                <h2 className="zelony-section-title text-lg">Filtros de Bloqueio</h2>
-              </div>
+              <h2 className="zelony-section-title text-lg mb-5">Filtros de Bloqueio</h2>
 
               <div className="mb-5">
                 <div className="flex items-center justify-between gap-4 mb-3">
@@ -2631,7 +2468,6 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                     className="zelony-btn-ghost !text-xs"
                     title="Adicionar mais um campo"
                   >
-                    <Plus className="w-4 h-4" />
                     Adicionar
                   </button>
                 </div>
@@ -2660,19 +2496,17 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                       activeFilters.has(keyword) ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'zelony-btn-secondary !py-1.5 !px-3 !text-xs'
                     }`}
                   >
-                    {activeFilters.has(keyword) && <X className="w-3 h-3 inline mr-1" />}
-                    {keyword}
+                    {activeFilters.has(keyword) ? "× " : ""}{keyword}
                   </button>
                 ))}
               </div>
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-zelony-muted w-5 h-5" />
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Buscar transações..."
-                  className="zelony-input !pl-11"
+                  className="zelony-input"
                 />
               </div>
             </div>
@@ -2831,7 +2665,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                               onClick={() => toggleTransactionState(t.id)}
                               className="flex items-center justify-center gap-1 mx-auto text-xs px-3 py-1 bg-zelony-brown/20 border border-zelony-gold/30 text-zelony-gold rounded-md hover:bg-zelony-brown/30 transition"
                             >
-                              <ArrowLeftRight className="w-3 h-3" /> Forçar Entrada
+                              Forçar Entrada
                             </button>
                           </td>
                         </tr>
@@ -2852,7 +2686,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
             <div className="zelony-card p-6 sm:p-8 w-full max-w-md shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zelony-gold/60 to-transparent" />
               <h2 className="text-xl font-bold mb-1 flex items-center gap-2 text-zelony-text">
-                <Lock className="text-zelony-gold" size={20} /> Alterar Senha
+                Alterar Senha
               </h2>
               <p className="text-sm text-zelony-muted mb-5">Mínimo de 8 caracteres</p>
               <input
@@ -2892,7 +2726,6 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
               rel="noopener noreferrer"
               className="zelony-btn-secondary !border-emerald-500/30 !text-emerald-400 hover:!bg-emerald-500/10 shrink-0"
             >
-              <MessageCircle size={18} />
               Abrir WhatsApp
             </a>
           </div>
