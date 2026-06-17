@@ -7,8 +7,11 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zelony-bg flex items-center justify-center">
-        <div className="text-lg text-zelony-muted">Carregando...</div>
+      <div className="zelony-page items-center justify-center">
+        <div className="flex flex-col items-center gap-4 animate-fade-in">
+          <div className="h-12 w-12 rounded-2xl border-2 border-zelony-gold/30 border-t-zelony-gold animate-spin" />
+          <p className="text-sm text-zelony-muted">Carregando plataforma...</p>
+        </div>
       </div>
     );
   }

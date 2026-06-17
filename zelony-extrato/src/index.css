@@ -3,17 +3,104 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
   body {
-    @apply bg-zelony-bg text-zinc-100 antialiased;
+    @apply bg-zelony-bg text-zelony-text antialiased font-sans;
   }
 
   input,
   textarea,
   select {
-    @apply bg-zelony-surface text-zinc-100;
+    @apply bg-zelony-surface text-zelony-text placeholder:text-zelony-muted;
   }
 
   ::selection {
-    @apply bg-zelony-gold/30 text-white;
+    @apply bg-zelony-gold/25 text-white;
+  }
+}
+
+@layer components {
+  .zelony-page {
+    @apply min-h-screen bg-zelony-bg bg-zelony-mesh flex flex-col;
+  }
+
+  .zelony-card {
+    @apply bg-zelony-card/90 backdrop-blur-sm border border-zelony-border rounded-2xl shadow-card;
+  }
+
+  .zelony-card-interactive {
+    @apply zelony-card transition-all duration-200 hover:border-zelony-gold/25 hover:shadow-card-hover;
+  }
+
+  .zelony-label {
+    @apply block text-[11px] font-semibold uppercase tracking-[0.14em] text-zelony-muted mb-2;
+  }
+
+  .zelony-input {
+    @apply w-full px-4 py-3 rounded-xl border border-zelony-border bg-zelony-surface/80
+      focus:outline-none focus:ring-2 focus:ring-zelony-gold/30 focus:border-zelony-gold/50
+      transition-all duration-200;
+  }
+
+  .zelony-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm
+      bg-gradient-to-b from-zelony-gold-hover to-zelony-gold text-zelony-bg
+      shadow-gold-sm hover:from-zelony-gold hover:to-zelony-gold-dim
+      active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .zelony-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-medium text-sm
+      bg-zelony-surface border border-zelony-border text-zelony-text-secondary
+      hover:bg-zelony-card-hover hover:text-zelony-text hover:border-zelony-gold/20 transition-all;
+  }
+
+  .zelony-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-medium
+      text-zelony-muted hover:text-zelony-text hover:bg-zelony-surface transition-all;
+  }
+
+  .zelony-badge-gold {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wide
+      bg-zelony-gold/10 text-zelony-gold border border-zelony-gold/25;
+  }
+
+  .zelony-section-title {
+    @apply text-xl sm:text-2xl font-bold text-zelony-text tracking-tight;
+  }
+
+  .zelony-table {
+    @apply w-full text-sm;
+  }
+
+  .zelony-table thead {
+    @apply bg-zelony-surface/80;
+  }
+
+  .zelony-table th {
+    @apply px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-zelony-muted;
+  }
+
+  .zelony-table td {
+    @apply px-4 py-3 text-zelony-text-secondary;
+  }
+
+  .zelony-table tbody tr {
+    @apply border-t border-zelony-border-subtle hover:bg-zelony-surface/50 transition-colors;
+  }
+
+  .zelony-alert-error {
+    @apply rounded-xl border border-red-500/30 bg-red-950/40 text-red-300 text-sm px-4 py-3;
+  }
+
+  .zelony-alert-warning {
+    @apply rounded-xl border border-amber-500/30 bg-amber-950/30 text-amber-200 text-sm px-4 py-3;
+  }
+
+  .zelony-alert-success {
+    @apply rounded-xl border border-emerald-500/30 bg-emerald-950/30 text-emerald-200 text-sm px-4 py-3;
   }
 }

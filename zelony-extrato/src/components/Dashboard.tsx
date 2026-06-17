@@ -3,7 +3,6 @@ import { useAuth } from '../contexts/AuthContext';
 // CORREÇÃO: Unificando todos os ícones em um único import
 import { 
   Upload, 
-  LogOut, 
   Search, 
   X, 
   Filter, 
@@ -12,9 +11,7 @@ import {
   FileText,
   Plus,
   FileSpreadsheet,
-  Key,    
   Lock,
-  ScrollText,
   Sparkles,
   MessageCircle
 } from 'lucide-react';
@@ -30,7 +27,9 @@ import {
   isGenericCounterpartyLabel
 } from "../utils/counterparty";
 import { CreditsFooter } from "./CreditsFooter";
+import { AppNav } from "./AppNav";
 import { apiPath, appBase } from "../lib/paths";
+import { publicAsset } from "../lib/asset";
 
 /** Nome exibido: IA + regra “texto após pelo Pix” na mesma linha */
 const resolvedCounterparty = (t: Pick<Transaction, "description" | "counterparty">) =>
@@ -1506,79 +1505,24 @@ useEffect(() => {
       : "Clique para selecionar ou arraste PDF(s)";
 
   return (
-<div className="min-h-screen bg-zelony-bg flex flex-col">
-<nav className="sticky top-0 z-50 bg-zelony-surface/95 backdrop-blur-md border-b border-zelony-border">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-    <div className="flex justify-between items-center">
+<div className="zelony-page">
+<AppNav
+  userEmail={user?.email}
+  activePage={activePage}
+  onTogglePage={() => setActivePage((prev) => (prev === "logs" ? "dashboard" : "logs"))}
+  onPassword={() => setShowPasswordModal(true)}
+  onLogout={handleLogout}
+  loading={loading}
+  whatsappUrl={WHATSAPP_SUPPORT_URL}
+/>
       
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-zelony-brown/40 border border-zelony-gold/30">
-          <FileText className="w-5 h-5 text-zelony-gold" />
-        </div>
-        <h1 className="text-xl font-bold tracking-tight text-zinc-100">
-          Zelony Extrato <span className="text-zelony-gold font-medium hidden sm:inline">| Análise de Extratos</span>
-        </h1>
-      </div>
-
-      <div className="flex items-center gap-4">
-        <div className="hidden md:block text-right mr-2">
-          <p className="text-[10px] uppercase tracking-wider text-zelony-muted font-bold">Usuário Ativo</p>
-          <p className="text-sm font-medium text-zinc-300">{user?.email}</p>
-        </div>
-
-        <button 
-          onClick={() => setActivePage((prev) => (prev === "logs" ? "dashboard" : "logs"))}
-          className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold transition-all border ${
-            activePage === "logs"
-              ? "bg-zelony-gold text-zelony-bg border-zelony-gold"
-              : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
-          }`}
-          title={activePage === "logs" ? "Voltar para dashboard" : "Abrir página de logs"}
-        >
-          <ScrollText size={16} />
-          <span>{activePage === "logs" ? "DASHBOARD" : "LOGS"}</span>
-          {loading && <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />}
-        </button>
-
-        <a
-          href={WHATSAPP_SUPPORT_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition-colors"
-          title="Falar com suporte no WhatsApp"
-        >
-          <MessageCircle size={18} />
-          <span className="hidden sm:inline">Suporte</span>
-        </a>
-
-        <button 
-          onClick={() => setShowPasswordModal(true)} 
-          className="flex items-center gap-2 text-zelony-muted hover:text-yellow-600 transition-colors p-2 rounded-xl hover:bg-yellow-50"
-        >
-          <Key size={18} />
-          <span className="text-sm font-semibold hidden md:inline">Senha</span>
-        </button>
-
-        <button 
-          onClick={handleLogout}
-          className="group flex items-center gap-2 px-4 py-2 text-sm font-semibold text-zinc-400 hover:text-red-400 hover:bg-red-950/30 rounded-xl transition-all"
-        >
-          <LogOut size={18} className="transition-transform group-hover:-translate-x-1" />
-          <span>Sair</span>
-        </button>
-      </div>
-
-    </div>
-  </div>
-</nav>
-      
-  <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex-1 w-full animate-fade-in">
     {activePage === "logs" ? (
-      <div className="bg-zelony-card rounded-2xl border border-zelony-border p-6 shadow-sm">
+      <div className="zelony-card p-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-5">
           <div>
-            <h2 className="text-2xl font-bold text-zinc-100">Logs da Plataforma</h2>
-            <p className="text-sm text-zinc-400">
+            <h2 className="zelony-section-title">Logs da Plataforma</h2>
+            <p className="text-sm text-zelony-muted">
               Aqui você acompanha quem gerou relatório, de qual titular, em qual dia e horário.
             </p>
           </div>
@@ -1586,7 +1530,7 @@ useEffect(() => {
             <button
               onClick={loadAuditLogs}
               disabled={auditLoading}
-              className="px-4 py-2 rounded-lg bg-zelony-gold hover:bg-zelony-gold-hover text-zelony-bg font-semibold disabled:opacity-50"
+              className="zelony-btn-primary !py-2 !px-4 disabled:opacity-50"
             >
               {auditLoading ? "Atualizando..." : "Atualizar logs"}
             </button>
@@ -1594,35 +1538,35 @@ useEffect(() => {
         </div>
 
         {!canViewAuditLogs ? (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900">
+          <div className="zelony-alert-warning">
             Você não tem permissão para visualizar a auditoria global.
           </div>
         ) : auditError ? (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">{auditError}</div>
+          <div className="zelony-alert-error">{auditError}</div>
         ) : (
           <div className="space-y-4">
             <div className="overflow-x-auto rounded-xl border border-zelony-border">
               <table className="w-full text-sm">
                 <thead className="bg-zelony-surface">
                   <tr>
-                    <th className="p-3 text-left font-semibold text-zinc-400">Data/Hora</th>
-                    <th className="p-3 text-left font-semibold text-zinc-400">Usuário</th>
-                    <th className="p-3 text-left font-semibold text-zinc-400">Ação</th>
-                    <th className="p-3 text-left font-semibold text-zinc-400">Titular do extrato</th>
-                    <th className="p-3 text-left font-semibold text-zinc-400">Arquivo</th>
+                    <th className="p-3 text-left font-semibold text-zelony-muted">Data/Hora</th>
+                    <th className="p-3 text-left font-semibold text-zelony-muted">Usuário</th>
+                    <th className="p-3 text-left font-semibold text-zelony-muted">Ação</th>
+                    <th className="p-3 text-left font-semibold text-zelony-muted">Titular do extrato</th>
+                    <th className="p-3 text-left font-semibold text-zelony-muted">Arquivo</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-zelony-border-subtle">
                   {auditLogs.map((log) => (
                     <tr key={log.id} className="hover:bg-zelony-surface">
-                      <td className="p-3 text-zinc-300">{new Date(log.created_at).toLocaleString("pt-BR")}</td>
-                      <td className="p-3 text-zinc-200">
+                      <td className="p-3 text-zelony-text-secondary">{new Date(log.created_at).toLocaleString("pt-BR")}</td>
+                      <td className="p-3 text-zelony-text-secondary">
                         <p className="font-semibold">{log.actor_email}</p>
                         <p className="text-xs text-zelony-muted">{log.actor_role || "sem perfil"}</p>
                       </td>
-                      <td className="p-3 text-zinc-300">{ACTION_LABELS[log.action] || log.action}</td>
-                      <td className="p-3 text-zinc-100 font-medium">{extractOwnerFromAudit(log)}</td>
-                      <td className="p-3 text-zinc-400">{extractFileFromAudit(log)}</td>
+                      <td className="p-3 text-zelony-text-secondary">{ACTION_LABELS[log.action] || log.action}</td>
+                      <td className="p-3 text-zelony-text font-medium">{extractOwnerFromAudit(log)}</td>
+                      <td className="p-3 text-zelony-muted">{extractFileFromAudit(log)}</td>
                     </tr>
                   ))}
                   {auditLogs.length === 0 && !auditLoading && (
@@ -1637,10 +1581,10 @@ useEffect(() => {
             </div>
             <div className="rounded-xl border border-zelony-border p-3 bg-zelony-surface">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-semibold text-zinc-400 uppercase">Logs da sessão atual</p>
+                <p className="text-xs font-semibold text-zelony-muted uppercase">Logs da sessão atual</p>
                 <button
                   onClick={() => setProcessingLogs([])}
-                  className="text-xs px-2 py-1 rounded-md bg-zelony-card border border-zelony-border text-zinc-400 hover:bg-zelony-surface"
+                  className="text-xs px-2 py-1 rounded-md bg-zelony-card border border-zelony-border text-zelony-muted hover:bg-zelony-surface"
                 >
                   Limpar
                 </button>
@@ -1650,7 +1594,7 @@ useEffect(() => {
                   <p className="text-xs text-zelony-muted">Sem eventos nesta sessão.</p>
                 ) : (
                   processingLogs.map((line, idx) => (
-                    <p key={`${idx}-${line.slice(0, 20)}`} className="text-xs text-zinc-300 font-mono break-words">
+                    <p key={`${idx}-${line.slice(0, 20)}`} className="text-xs text-zelony-text-secondary font-mono break-words">
                       {line}
                     </p>
                   ))
@@ -1659,7 +1603,7 @@ useEffect(() => {
             </div>
 
             <div className="rounded-xl border border-zelony-border p-4 bg-zelony-card">
-              <h3 className="text-sm font-bold text-zinc-200 mb-3">Relatório detalhado por usuário</h3>
+              <h3 className="text-sm font-bold text-zelony-text-secondary mb-3">Relatório detalhado por usuário</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="rounded-lg border border-zelony-border bg-zelony-surface p-3 max-h-72 overflow-y-auto space-y-2">
                   {auditUserSummaries.length === 0 ? (
@@ -1676,8 +1620,8 @@ useEffect(() => {
                             : "border-zelony-border bg-zelony-card hover:bg-zelony-surface"
                         }`}
                       >
-                        <p className="text-sm font-semibold text-zinc-100">{u.email}</p>
-                        <p className="text-xs text-zinc-400">
+                        <p className="text-sm font-semibold text-zelony-text">{u.email}</p>
+                        <p className="text-xs text-zelony-muted">
                           {u.role || "analyst"} · {u.analysesFinished} extratos finalizados
                         </p>
                       </button>
@@ -1691,8 +1635,8 @@ useEffect(() => {
                   ) : (
                     <div className="space-y-3">
                       <div>
-                        <p className="text-sm font-bold text-zinc-100">{selectedAuditUser.email}</p>
-                        <p className="text-xs text-zinc-400">
+                        <p className="text-sm font-bold text-zelony-text">{selectedAuditUser.email}</p>
+                        <p className="text-xs text-zelony-muted">
                           Perfil: {selectedAuditUser.role || "analyst"} · Última atividade:{" "}
                           {new Date(selectedAuditUser.lastActivity).toLocaleString("pt-BR")}
                         </p>
@@ -1700,29 +1644,29 @@ useEffect(() => {
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div className="rounded-md bg-zelony-card border border-zelony-border p-2">
                           <p className="text-zelony-muted">Extratos finalizados</p>
-                          <p className="text-lg font-bold text-zinc-100">{selectedAuditUser.analysesFinished}</p>
+                          <p className="text-lg font-bold text-zelony-text">{selectedAuditUser.analysesFinished}</p>
                         </div>
                         <div className="rounded-md bg-zelony-card border border-zelony-border p-2">
                           <p className="text-zelony-muted">Arquivos processados</p>
-                          <p className="text-lg font-bold text-zinc-100">{selectedAuditUser.filesProcessed}</p>
+                          <p className="text-lg font-bold text-zelony-text">{selectedAuditUser.filesProcessed}</p>
                         </div>
                         <div className="rounded-md bg-zelony-card border border-zelony-border p-2">
                           <p className="text-zelony-muted">Relatórios abertos</p>
-                          <p className="text-lg font-bold text-zinc-100">{selectedAuditUser.reportsOpened}</p>
+                          <p className="text-lg font-bold text-zelony-text">{selectedAuditUser.reportsOpened}</p>
                         </div>
                         <div className="rounded-md bg-zelony-card border border-zelony-border p-2">
                           <p className="text-zelony-muted">Downloads (PDF/Excel)</p>
-                          <p className="text-lg font-bold text-zinc-100">{selectedAuditUser.downloads}</p>
+                          <p className="text-lg font-bold text-zelony-text">{selectedAuditUser.downloads}</p>
                         </div>
                       </div>
                       <div className="rounded-md bg-zelony-card border border-zelony-border p-2">
-                        <p className="text-xs font-semibold text-zinc-300 mb-2">Titulares mais analisados</p>
+                        <p className="text-xs font-semibold text-zelony-text-secondary mb-2">Titulares mais analisados</p>
                         {selectedAuditUser.owners.length === 0 ? (
                           <p className="text-xs text-zelony-muted">Sem titular identificado nos logs desse usuário.</p>
                         ) : (
                           <div className="max-h-28 overflow-y-auto space-y-1">
                             {selectedAuditUser.owners.slice(0, 12).map((owner) => (
-                              <p key={`${selectedAuditUser.email}-${owner.name}`} className="text-xs text-zinc-300">
+                              <p key={`${selectedAuditUser.email}-${owner.name}`} className="text-xs text-zelony-text-secondary">
                                 {owner.name} — {owner.count} vez(es)
                               </p>
                             ))}
@@ -1743,13 +1687,13 @@ useEffect(() => {
       <div className="bg-zelony-card rounded-2xl border border-zelony-border p-6 mb-8 shadow-sm">
         <div className="flex items-center justify-between gap-4 mb-4">
           <div>
-            <h2 className="text-xl font-bold text-zinc-100">Gestão de Acesso</h2>
+            <h2 className="text-xl font-bold text-zelony-text">Gestão de Acesso</h2>
             <p className="text-sm text-zelony-muted">Criar/remover contas de admins e analistas.</p>
           </div>
           <button
             onClick={refreshAdminUsers}
             disabled={adminBusy}
-            className="px-4 py-2 rounded-lg bg-zelony-surface hover:bg-zelony-border text-zinc-100 font-semibold disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-zelony-surface hover:bg-zelony-border text-zelony-text font-semibold disabled:opacity-50"
           >
             {adminBusy ? "Carregando..." : "Atualizar lista"}
           </button>
@@ -1780,7 +1724,7 @@ useEffect(() => {
           <button
             onClick={adminCreateUser}
             disabled={adminBusy}
-            className="px-4 py-2 rounded-lg bg-zelony-gold hover:bg-zelony-gold-hover text-zelony-bg font-semibold disabled:opacity-50"
+            className="zelony-btn-primary !py-2 !px-4 disabled:opacity-50"
           >
             Cadastrar
           </button>
@@ -1795,16 +1739,16 @@ useEffect(() => {
                 <th className="px-4 py-3 text-right text-xs font-bold text-zelony-muted uppercase">Ação</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-zelony-border-subtle">
               {adminUsers.map((u) => (
                 <tr key={u.id}>
-                  <td className="px-4 py-3 text-sm text-zinc-100">{u.email || u.id}</td>
-<td className="px-4 py-3 text-sm text-zinc-300">
+                  <td className="px-4 py-3 text-sm text-zelony-text">{u.email || u.id}</td>
+<td className="px-4 py-3 text-sm text-zelony-text-secondary">
   {u.role === "admin" ? "Administrador" : "Analista"}
 </td>                  <td className="px-4 py-3 text-right">
                     <button
                       onClick={() => adminDeleteUser(u.id)}
-                      className="text-sm font-semibold text-red-600 hover:text-red-700"
+                      className="text-sm font-semibold text-red-400 hover:text-red-300"
                     >
                       Remover
                     </button>
@@ -1824,10 +1768,10 @@ useEffect(() => {
       </div>
     )}
 
-    <div className="bg-zelony-card rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zelony-border p-8 mb-8 transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
+    <div className="zelony-card-interactive p-6 sm:p-8 mb-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-zinc-100 flex items-center gap-3">
+          <h2 className="zelony-section-title flex items-center gap-3">
             <div className="p-2 bg-zelony-brown/20 rounded-lg">
               <Upload className="w-6 h-6 text-zelony-gold" />
             </div>
@@ -1841,12 +1785,12 @@ useEffect(() => {
                 href={WHATSAPP_SUPPORT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-emerald-700 hover:text-emerald-800 underline underline-offset-2"
+                className="font-semibold text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
               >
                 Fale com o suporte no WhatsApp
               </a>
             </p>
-            <p className="text-sm text-red-600 font-medium leading-relaxed">
+            <p className="text-sm text-red-400 font-medium leading-relaxed">
               <span className="font-semibold">OBS.:</span> Alguns bancos podem apresentar
               falhas. Cabe ao analista realizar a revisão antes de efetuar a entrega.
             </p>
@@ -1863,7 +1807,7 @@ useEffect(() => {
                 className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
                   analysisMode === "ai"
                     ? "bg-zelony-gold text-zelony-bg border-zelony-gold shadow-sm"
-                    : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                    : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                 }`}
               >
                 <Sparkles size={16} />
@@ -1885,12 +1829,12 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "nubank"
                       ? "bg-[#8A05BE] text-zelony-bg border-[#8A05BE] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/nubank.png"
+                      src={publicAsset("nubank.png")}
                       alt="Nubank"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -1909,12 +1853,12 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "bradesco"
                       ? "bg-[#CC092F] text-zelony-bg border-[#CC092F] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/bradesco.png"
+                      src={publicAsset("bradesco.png")}
                       alt="Bradesco"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -1933,12 +1877,12 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "bancodobrasil"
                       ? "bg-[#F9C700] text-black border-[#F9C700] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/bancodobrasil.png"
+                      src={publicAsset("bancodobrasil.png")}
                       alt="Banco do Brasil"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -1957,12 +1901,12 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "inter"
                       ? "bg-[#FF7A00] text-zelony-bg border-[#FF7A00] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/inter.png"
+                      src={publicAsset("inter.png")}
                       alt="Banco Inter"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -1981,13 +1925,13 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "santander"
                       ? "bg-[#EC0000] text-zelony-bg border-[#EC0000] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Santander (sem IA) — Internet Banking ou Consolidado Inteligente"
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/santander.png"
+                      src={publicAsset("santander.png")}
                       alt="Santander"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -2006,13 +1950,13 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "c6"
                       ? "bg-[#1A1A1A] text-[#FFD100] border-[#1A1A1A] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="C6 Bank (sem IA)"
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/c6.png"
+                      src={publicAsset("c6.png")}
                       alt="C6 Bank"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -2031,7 +1975,7 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "pan"
                       ? "bg-[#007DC6] text-zelony-bg border-[#007DC6] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Banco Pan (sem IA)"
                 >
@@ -2049,7 +1993,7 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "pagbank"
                       ? "bg-[#00A868] text-zelony-bg border-[#00A868] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="PagBank (sem IA)"
                 >
@@ -2067,13 +2011,13 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "itau"
                       ? "bg-[#FF6200] text-zelony-bg border-[#FF6200] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Itaú (sem IA)"
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/itau.png"
+                      src={publicAsset("itau.png")}
                       alt="Itaú"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -2092,13 +2036,13 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "picpay"
                       ? "bg-[#21C25E] text-zelony-bg border-[#21C25E] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="PicPay (sem IA)"
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/picpay.png"
+                      src={publicAsset("picpay.png")}
                       alt="PicPay"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -2117,13 +2061,13 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "mercadopago"
                       ? "bg-[#009EE3] text-zelony-bg border-[#009EE3] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Mercado Pago (sem IA)"
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/mercadopago.png"
+                      src={publicAsset("mercadopago.png")}
                       alt="Mercado Pago"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -2142,13 +2086,13 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "stone"
                       ? "bg-[#0F3D3A] text-zelony-bg border-[#0F3D3A] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Stone (sem IA)"
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/stone.png"
+                      src={publicAsset("stone.png")}
                       alt="Stone"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -2167,13 +2111,13 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "sicredi"
                       ? "bg-[#007A53] text-zelony-bg border-[#007A53] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Sicredi (sem IA)"
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/sicredi.png"
+                      src={publicAsset("sicredi.png")}
                       alt="Sicredi"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -2192,7 +2136,7 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "caixa"
                       ? "bg-[#005CA9] text-zelony-bg border-[#005CA9] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Caixa Econômica (sem IA — extrato por período)"
                 >
@@ -2210,13 +2154,13 @@ useEffect(() => {
                   className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                     analysisMode === "no_ai" && statementBank === "neon"
                       ? "bg-[#1ED760] text-black border-[#1ED760] shadow-sm"
-                      : "bg-zelony-card text-zinc-300 border-zelony-border hover:bg-zelony-surface"
+                      : "bg-zelony-card text-zelony-text-secondary border-zelony-border hover:bg-zelony-surface"
                   }`}
                   title="Neon (sem IA)"
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-zelony-card/90 border border-black/10">
                     <img
-                      src="/neon.png"
+                      src={publicAsset("neon.png")}
                       alt="Neon"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -2259,7 +2203,7 @@ useEffect(() => {
             <div className="bg-zelony-surface p-2 rounded-lg text-zelony-muted group-hover:text-zelony-gold group-hover:bg-zelony-brown/20 transition-colors">
                <FileText className="w-5 h-5" />
             </div>
-            <span className="text-sm font-medium text-zinc-400">
+            <span className="text-sm font-medium text-zelony-muted">
               {files.length === 0
                 ? fileHint
                 : files.length === 1
@@ -2294,7 +2238,7 @@ useEffect(() => {
           </p>
           <div className="max-h-32 overflow-y-auto space-y-1">
             {files.map((f, idx) => (
-              <p key={`${f.name}-${f.size}-${f.lastModified}`} className="text-sm text-zinc-300 truncate">
+              <p key={`${f.name}-${f.size}-${f.lastModified}`} className="text-sm text-zelony-text-secondary truncate">
                 {idx + 1}. {f.name}
               </p>
             ))}
@@ -2315,8 +2259,8 @@ useEffect(() => {
 <h1 className="text-3xl font-bold">
 Relatório Financeiro Unificado
 </h1>
-<p className="text-zinc-400">
-Titular do extrato: <span className="font-semibold text-zinc-100">{statementOwnerName || "—"}</span>
+<p className="text-zelony-muted">
+Titular do extrato: <span className="font-semibold text-zelony-text">{statementOwnerName || "—"}</span>
 </p>
 <p className="text-zelony-muted text-sm">
 Analista (login): {user?.email}
@@ -2363,11 +2307,11 @@ Analista (login): {user?.email}
       {yearlyStats.map((ys) => (
         <div
           key={ys.year}
-          className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-5 shadow-sm"
+          className="rounded-xl border border-emerald-500/20 bg-emerald-950/25 p-5 shadow-sm"
         >
           <p className="text-xs font-semibold text-emerald-800">Média mensal em {ys.year}</p>
           <p className="text-2xl font-bold text-emerald-900">R$ {money(ys.monthAverage)}</p>
-          <p className="text-xs text-emerald-700/90 mt-2">
+          <p className="text-xs text-emerald-300/90 mt-2">
             {ys.monthsWithData} {ys.monthsWithData === 1 ? "mês" : "meses"} com movimento · total R${" "}
             {money(ys.yearTotal)}
           </p>
@@ -2431,7 +2375,7 @@ Analista (login): {user?.email}
 )}
 
 {excludedSummaryStats.length > 0 && (
-  <div className="mb-10 rounded-xl border border-red-100 bg-red-50/40 p-6 shadow-sm">
+  <div className="mb-10 rounded-xl border border-red-500/150/20 bg-red-950/25 p-6 shadow-sm">
     <h3 className="text-sm font-bold uppercase tracking-wide text-red-900 mb-2">
       Resumo dos desconsiderados (por motivo)
     </h3>
@@ -2441,7 +2385,7 @@ Analista (login): {user?.email}
     <div className="overflow-x-auto rounded-lg border border-red-100 bg-zelony-card">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-red-50/80 text-left">
+          <tr className="bg-red-950/30 text-left">
             <th className="p-3 font-semibold text-red-950">Motivo</th>
             <th className="p-3 font-semibold text-red-950 text-right">Qtd.</th>
             <th className="p-3 font-semibold text-red-950 text-right">Total R$</th>
@@ -2449,7 +2393,7 @@ Analista (login): {user?.email}
         </thead>
         <tbody>
           {excludedSummaryStats.map((row) => (
-            <tr key={row.reason} className="border-t border-red-50">
+            <tr key={row.reason} className="border-t border-red-500/15">
               <td className="p-3 text-slate-800">{row.reason}</td>
               <td className="p-3 text-right">{row.count}</td>
               <td className="p-3 text-right font-medium">R$ {money(row.total)}</td>
@@ -2542,7 +2486,7 @@ Evolução da Renda
       {monthlySeries.map((s) => (
         <div key={s.monthKey}>
           <div className="flex items-baseline justify-between mb-2">
-            <h3 className="font-semibold text-zinc-100">Mês {formatMonthKey(s.monthKey)}</h3>
+            <h3 className="font-semibold text-zelony-text">Mês {formatMonthKey(s.monthKey)}</h3>
             <p className="text-sm text-zelony-muted">Soma: R$ {money(s.values.reduce((a, b) => a + b, 0))}</p>
           </div>
           <div className="h-64">
@@ -2645,11 +2589,11 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
 
               <div className="mb-4">
                 <div className="flex items-center justify-between gap-4 mb-2">
-                  <p className="text-sm font-semibold text-zinc-300">Pessoas a desconsiderar</p>
+                  <p className="text-sm font-semibold text-zelony-text-secondary">Pessoas a desconsiderar</p>
                   <button
                     type="button"
                     onClick={addIgnoredPersonField}
-                    className="text-xs px-3 py-2 rounded-md bg-zelony-surface hover:bg-zelony-border text-zinc-200 flex items-center gap-2"
+                    className="text-xs px-3 py-2 rounded-md bg-zelony-surface hover:bg-zelony-border text-zelony-text-secondary flex items-center gap-2"
                     title="Adicionar mais um campo"
                   >
                     <Plus className="w-4 h-4" />
@@ -2678,7 +2622,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                     key={keyword}
                     onClick={() => toggleFilter(keyword)}
                     className={`px-4 py-2 rounded-lg font-medium transition ${
-                      activeFilters.has(keyword) ? 'bg-red-600 text-zelony-bg' : 'bg-zelony-surface text-zinc-300 hover:bg-zelony-border'
+                      activeFilters.has(keyword) ? 'bg-red-600 text-zelony-bg' : 'bg-zelony-surface text-zelony-text-secondary hover:bg-zelony-border'
                     }`}
                   >
                     {activeFilters.has(keyword) && <X className="w-4 h-4 inline mr-1" />}
@@ -2722,14 +2666,14 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                       <th className="px-6 py-3 text-center text-xs font-medium text-zelony-muted uppercase tracking-wider">Ação</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-zelony-border-subtle">
                     {validIncomes.map((t) => {
                       const cp = resolvedCounterparty(t);
                       return (
                       <tr key={t.id} className="hover:bg-zelony-surface transition-colors">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-100">{t.date}</td>
-                        <td className="px-6 py-4 text-sm text-zinc-100">{t.description}</td>
-                        <td className="px-6 py-4 text-sm text-zinc-100">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-zelony-text">{t.date}</td>
+                        <td className="px-6 py-4 text-sm text-zelony-text">{t.description}</td>
+                        <td className="px-6 py-4 text-sm text-zelony-text">
                           <input
                             value={t.personName || ""}
                             onChange={(e) => updateTransactionMeta(t.id, { personName: e.target.value })}
@@ -2742,7 +2686,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                             </p>
                           ) : null}
                         </td>
-                        <td className="px-6 py-4 text-sm text-zinc-100">
+                        <td className="px-6 py-4 text-sm text-zelony-text">
                           <select
                             value={t.relationship || ""}
                             onChange={(e) => updateTransactionMeta(t.id, { relationship: e.target.value })}
@@ -2761,7 +2705,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                         <td className="px-6 py-4 text-center">
                           <button
                             onClick={() => toggleTransactionState(t.id)}
-                            className="text-xs px-3 py-1 bg-zelony-card border border-red-300 text-red-600 rounded-md hover:bg-red-50 transition"
+                            className="text-xs px-3 py-1 bg-zelony-card border border-red-500/150/30 text-red-400 rounded-md hover:bg-red-500/10 transition"
                             title="Mover para excluídos"
                           >
                             Remover
@@ -2778,7 +2722,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
               </div>
             </div>
 
-            <div className="bg-zelony-card rounded-xl shadow-sm overflow-hidden border-l-4 border-red-500">
+            <div className="bg-zelony-card rounded-xl shadow-sm overflow-hidden border-l-4 border-red-500/150">
               <div className="p-6 border-b flex justify-between items-center bg-red-50/50">
                 <div>
                   <h2 className="text-xl font-semibold text-red-900">Transações inválidas / ignoradas</h2>
@@ -2790,7 +2734,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-red-50/80">
+                  <thead className="bg-red-950/30">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-zelony-muted uppercase tracking-wider">Data</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-zelony-muted uppercase tracking-wider">Descrição</th>
@@ -2801,7 +2745,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                       <th className="px-6 py-3 text-center text-xs font-medium text-zelony-muted uppercase tracking-wider">Ação</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200 opacity-80">
+                  <tbody className="divide-y divide-zelony-border-subtle opacity-80">
                     {excludedOrDebits.map((t) => {
                       const blockKw = Array.from(activeFilters).find((filter) =>
                         normalize(t.description).includes(normalize(filter))
@@ -2815,9 +2759,9 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
 
                       return (
                         <tr key={t.id} className="hover:bg-zelony-surface transition-colors">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-100">{t.date}</td>
-                          <td className="px-6 py-4 text-sm text-zinc-100">{t.description}</td>
-                          <td className="px-6 py-4 text-sm text-zinc-100">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-zelony-text">{t.date}</td>
+                          <td className="px-6 py-4 text-sm text-zelony-text">{t.description}</td>
+                          <td className="px-6 py-4 text-sm text-zelony-text">
                             <input
                               value={t.personName || ""}
                               onChange={(e) => updateTransactionMeta(t.id, { personName: e.target.value })}
@@ -2830,7 +2774,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                               </p>
                             ) : null}
                           </td>
-                          <td className="px-6 py-4 text-sm text-zinc-100">
+                          <td className="px-6 py-4 text-sm text-zelony-text">
                             <select
                               value={t.relationship || ""}
                               onChange={(e) => updateTransactionMeta(t.id, { relationship: e.target.value })}
@@ -2843,7 +2787,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                               ))}
                             </select>
                           </td>
-                          <td className="px-6 py-4 text-sm text-right font-medium text-zinc-400">
+                          <td className="px-6 py-4 text-sm text-right font-medium text-zelony-muted">
                             R$ {t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                           </td>
                           <td className="px-6 py-4 text-sm text-orange-600">{motivo}</td>
@@ -2871,20 +2815,20 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
         {showPasswordModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-zelony-card rounded-2xl p-6 w-full max-w-md shadow-2xl">
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-zinc-100">
-                <Lock className="text-yellow-600" /> Alterar Senha
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-zelony-text">
+                <Lock className="text-zelony-gold" /> Alterar Senha
               </h2>
               <input
                 type="password"
                 placeholder="Nova senha (mín. 8 caracteres)"
-                className="w-full px-4 py-3 border border-zelony-border rounded-xl mb-4 focus:ring-2 focus:ring-zelony-gold/50 outline-none text-zinc-100"
+                className="w-full px-4 py-3 border border-zelony-border rounded-xl mb-4 focus:ring-2 focus:ring-zelony-gold/50 outline-none text-zelony-text"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowPasswordModal(false)}
-                  className="flex-1 px-4 py-2 bg-zelony-surface text-zinc-300 rounded-lg font-semibold hover:bg-zelony-border transition-colors"
+                  className="flex-1 px-4 py-2 bg-zelony-surface text-zelony-text-secondary rounded-lg font-semibold hover:bg-zelony-border transition-colors"
                 >
                   Cancelar
                 </button>
@@ -2918,7 +2862,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
         )}
       </main>
 
-      <CreditsFooter />
+      <CreditsFooter className="border-t border-zelony-border-subtle mt-auto" />
     </div>
   );
 }

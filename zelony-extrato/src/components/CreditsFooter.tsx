@@ -1,10 +1,10 @@
 export function CreditsFooter({ className = '' }: { className?: string }) {
   return (
     <footer
-      className={`text-center text-xs text-zelony-muted py-6 border-t border-zelony-border ${className}`}
+      className={`text-center text-xs text-zelony-muted py-5 ${className}`}
     >
       Desenvolvido por{' '}
-      <span className="text-zelony-gold font-medium">Luan Biagioni</span>
+      <span className="text-zelony-gold font-semibold">Luan Biagioni</span>
     </footer>
   );
 }
