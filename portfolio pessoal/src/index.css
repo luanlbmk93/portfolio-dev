@@ -69,64 +69,44 @@ img {
   display: block;
 }
 
+/* Shader background — Grid Run by @atzedent */
+.shader-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: #000;
+}
+
+.shader-bg__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.shader-bg__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 100% 70% at 50% 35%, transparent 0%, rgba(5, 7, 12, 0.35) 50%, rgba(5, 7, 12, 0.82) 100%),
+    linear-gradient(180deg, rgba(5, 7, 12, 0.45) 0%, transparent 25%, rgba(5, 7, 12, 0.55) 100%);
+}
+
 /* Background layers */
 .bg-grid {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
+  opacity: 0.35;
   background-image:
     linear-gradient(rgba(57, 255, 20, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(57, 255, 20, 0.03) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 70%);
-}
-
-.bg-glow {
-  position: fixed;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.35;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.bg-glow--green {
-  top: -200px;
-  left: -100px;
-  background: var(--green);
-  opacity: 0.08;
-}
-
-.bg-glow--cyan {
-  top: 40%;
-  right: -200px;
-  background: var(--cyan);
-  opacity: 0.06;
-}
-
-.bg-glow--purple {
-  bottom: -100px;
-  left: 30%;
-  background: var(--purple);
-  opacity: 0.07;
-}
-
-.bg-scanline {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.03;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.4) 2px,
-    rgba(0, 0, 0, 0.4) 4px
-  );
 }
 
 /* Layout */

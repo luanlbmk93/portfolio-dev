@@ -4,17 +4,15 @@ import { Contact } from "./components/Contact";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
 import { Nav } from "./components/Nav";
+import { ShaderBackground } from "./components/ShaderBackground";
 import { Stack } from "./components/Stack";
 import { Work } from "./components/Work";
 
 export default function App() {
   return (
     <>
+      <ShaderBackground />
       <div className="bg-grid" aria-hidden />
-      <div className="bg-glow bg-glow--green" aria-hidden />
-      <div className="bg-glow bg-glow--cyan" aria-hidden />
-      <div className="bg-glow bg-glow--purple" aria-hidden />
-      <div className="bg-scanline" aria-hidden />
 
       <div className="app">
         <Nav />
