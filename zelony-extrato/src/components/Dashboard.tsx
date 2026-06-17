@@ -11,7 +11,6 @@ import {
   extractBestCounterpartyFromDescription,
   isGenericCounterpartyLabel
 } from "../utils/counterparty";
-import { CreditsFooter } from "./CreditsFooter";
 import { AppNav } from "./AppNav";
 import { apiPath, appBase } from "../lib/paths";
 
@@ -2731,8 +2730,6 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
           </div>
         )}
       </main>
-
-      <CreditsFooter className="border-t border-zelony-border-subtle mt-auto" />
     </div>
   );
 }

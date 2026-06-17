@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { CreditsFooter } from './CreditsFooter';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -79,8 +78,6 @@ export function LoginForm() {
           </div>
         </div>
       </div>
-
-      <CreditsFooter className="border-zelony-border-subtle bg-zelony-bg/50" />
     </div>
   );
 }
