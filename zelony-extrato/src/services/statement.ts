@@ -1,4 +1,5 @@
 import { enrichCounterpartyFromDescription } from "../utils/counterparty";
+import { apiPath } from "../lib/paths";
 
 type AnalyzeStatementProgress = {
   startPage: number;
@@ -12,9 +13,8 @@ type AnalyzeStatementProgress = {
 function statementApiBase(): string {
   const explicit = (import.meta as any).env?.VITE_STATEMENT_API_URL?.toString().trim();
   if (explicit) return explicit.replace(/\/$/, "");
-  // Dev: URL relativa → proxy do Vite em vite.config.ts (/parse-statement → :8000)
   if (import.meta.env.DEV) return "";
-  return "http://127.0.0.1:8000";
+  return apiPath("").replace(/\/$/, "") || "";
 }
 
 function formatBackendHttpError(status: number, data: Record<string, unknown>): string {
@@ -81,7 +81,7 @@ export async function analyzeStatement(
   let res: Response;
   try {
     const base = statementApiBase();
-    const url = base ? `${base}/parse-statement` : "/parse-statement";
+    const url = base ? `${base}/parse-statement` : apiPath("/parse-statement");
     res = await fetch(url, {
       method: "POST",
       body: fd,

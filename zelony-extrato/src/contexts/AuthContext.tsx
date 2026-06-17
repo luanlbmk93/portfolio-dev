@@ -1,13 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
+import { apiPath } from '../lib/paths';
 
 type AppRole = 'admin' | 'analyst';
 type AppUser = { id: string; email: string };
 
 const TOKEN_STORAGE_KEY = 'auth_token';
-// Em DEV, use sempre rotas relativas (/api/*) e deixe o Vite fazer proxy.
-// Em PROD, o recomendado é servir o frontend e o /api no mesmo domínio (Nginx reverse proxy),
-// então rotas relativas continuam funcionando sem CORS.
-const apiUrl = (path: string) => path;
+const apiUrl = apiPath;
 
 interface AuthContextType {
   user: AppUser | null;

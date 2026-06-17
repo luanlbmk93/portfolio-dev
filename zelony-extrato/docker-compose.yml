@@ -61,6 +61,14 @@ services:
       - statement
     ports:
       - "8080:80"
+    networks:
+      - default
+      - nexo
 
 volumes:
   zelony_pg_data:
+
+networks:
+  nexo:
+    external: true
+    name: ${NEXO_DOCKER_NETWORK:-nexo_default}

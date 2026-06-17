@@ -1,7 +1,8 @@
 import { PDFDocument } from "pdf-lib";
 import { enrichCounterpartyFromDescription } from "../utils/counterparty";
+import { apiPath } from "../lib/paths";
 
-const PROXY_URL = "/api/proxy-gemini";
+const PROXY_URL = apiPath("/api/proxy-gemini");
 
 /** Muitas retentativas: 429 do Gemini / Cloudflare costuma exigir espera longa */
 const MAX_CHUNK_ATTEMPTS = 3;

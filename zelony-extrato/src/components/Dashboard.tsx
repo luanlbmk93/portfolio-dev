@@ -30,6 +30,7 @@ import {
   isGenericCounterpartyLabel
 } from "../utils/counterparty";
 import { CreditsFooter } from "./CreditsFooter";
+import { apiPath, appBase } from "../lib/paths";
 
 /** Nome exibido: IA + regra “texto após pelo Pix” na mesma linha */
 const resolvedCounterparty = (t: Pick<Transaction, "description" | "counterparty">) =>
@@ -257,11 +258,11 @@ const handleLogout = async () => {
 
     await signOut();
 
-    window.location.href = '/login'; 
+    window.location.href = appBase() || '/';
     
   } catch (error) {
     console.error("Erro fatal ao sair:", error);
-    window.location.href = '/login';
+    window.location.href = appBase() || '/';
   }
 };
   // ---------------------------
@@ -320,7 +321,7 @@ const handleLogout = async () => {
   ) => {
     if (!user?.email) return;
     try {
-      await fetch("/api/audit-logs", {
+      await fetch(apiPath("/api/audit-logs"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -345,7 +346,7 @@ const handleLogout = async () => {
     setAuditLoading(true);
     setAuditError("");
     try {
-      const response = await fetch("/api/audit-logs?limit=150", {
+      const response = await fetch(apiPath("/api/audit-logs?limit=150"), {
         headers: { "x-user-email": user.email }
       });
       const payload = await response.json().catch(() => ({}));
@@ -372,7 +373,7 @@ const handleLogout = async () => {
     if (role !== "admin") return;
     setAdminBusy(true);
     try {
-      const resp = await fetch("/api/admin-users", {
+      const resp = await fetch(apiPath("/api/admin-users"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -398,7 +399,7 @@ const handleLogout = async () => {
   }
   setLoadingPassword(true);
   try {
-    const resp = await fetch("/api/admin-users", {
+    const resp = await fetch(apiPath("/api/admin-users"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -421,7 +422,7 @@ const handleLogout = async () => {
   const adminCreateUser = async () => {
     setAdminBusy(true);
     try {
-      const resp = await fetch("/api/admin-users", {
+      const resp = await fetch(apiPath("/api/admin-users"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -445,7 +446,7 @@ const handleLogout = async () => {
     if (!confirm("Remover este usuário da equipe?")) return;
     setAdminBusy(true);
     try {
-      const resp = await fetch("/api/admin-users", {
+      const resp = await fetch(apiPath("/api/admin-users"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

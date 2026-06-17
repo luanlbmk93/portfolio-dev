@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => {
   ).trim();
 
   return {
+    base: process.env.VITE_BASE || '/',
     plugins: [react()],
     optimizeDeps: {
       exclude: ["lucide-react"],
