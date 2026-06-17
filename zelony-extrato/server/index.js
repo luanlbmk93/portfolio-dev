@@ -154,6 +154,53 @@ async function ensureUsersTable() {
   `);
 }
 
+async function ensureAuthSchema() {
+  await pool.query(`CREATE SCHEMA IF NOT EXISTS auth`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS auth.users (
+      id UUID PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      encrypted_password TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+}
+
+async function seedAdminIfConfigured() {
+  const email = process.env.SEED_ADMIN_EMAIL?.trim();
+  const password = process.env.SEED_ADMIN_PASSWORD;
+  if (!email || !password) {
+    console.log("[seed] SEED_ADMIN_* não definido — pulando criação de admin");
+    return;
+  }
+
+  const normalized = normalizeEmail(email);
+  const hash = await bcrypt.hash(String(password), 10);
+  const id = randomUUID();
+
+  await pool.query(
+    `INSERT INTO auth.users (id, email, encrypted_password)
+     VALUES ($1, $2, $3)
+     ON CONFLICT (email) DO UPDATE SET encrypted_password = EXCLUDED.encrypted_password`,
+    [id, normalized, hash],
+  );
+
+  const { rows } = await pool.query(
+    "SELECT id FROM auth.users WHERE email = $1 LIMIT 1",
+    [normalized],
+  );
+  const userId = rows[0]?.id || id;
+
+  await pool.query(
+    `INSERT INTO platform_users (id, email, role, must_change_password)
+     VALUES ($1, $2, 'admin', false)
+     ON CONFLICT (email) DO UPDATE SET role = 'admin', must_change_password = false`,
+    [userId, normalized],
+  );
+
+  console.log("[seed] Admin pronto:", normalized);
+}
+
 async function ensurePlatformUser({ id, email }) {
   const normalized = normalizeEmail(email);
   if (!id || !normalized) return;
@@ -688,8 +735,10 @@ if (SERVE_FRONTEND) {
 }
 
 // ======== SERVER ========
-ensureAuditTable()
+ensureAuthSchema()
+  .then(() => ensureAuditTable())
   .then(() => ensureUsersTable())
+  .then(() => seedAdminIfConfigured())
   .then(() => {
     app.listen(PORT, HOST, () => {
       console.log(`Zelony API: http://${HOST}:${PORT}`);
