@@ -9,8 +9,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { randomUUID } from "crypto";
 
-dotenv.config({ path: path.join(__dirname, "..", ".env") });
-
 const { Pool } = pkg;
 const app = express();
 
@@ -71,6 +69,8 @@ function passwordColSql() {
 // ======== CORRIGE __dirname (ESM) ========
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || '0.0.0.0';
@@ -698,5 +698,6 @@ ensureAuditTable()
   })
   .catch((err) => {
     console.error("Falha ao iniciar API:", err.message);
+    console.error(err);
     process.exit(1);
   });
