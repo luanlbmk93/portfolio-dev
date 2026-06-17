@@ -14,9 +14,10 @@ export function Stack() {
           </p>
         </Reveal>
 
-        <div className="domains-grid gsap-stagger-group">
-          {domains.map((d) => (
-            <article key={d.id} className={`domain-card domain-card--${d.color} gsap-stagger-item`}>
+        <div className="domains-grid">
+          {domains.map((d, i) => (
+            <Reveal key={d.id} delay={(i + 1) as 0 | 1 | 2 | 3}>
+              <article className={`domain-card domain-card--${d.color}`}>
                 <div className="domain-icon">{d.icon}</div>
                 <h3>{d.title}</h3>
                 <p>{d.desc}</p>
@@ -25,7 +26,8 @@ export function Stack() {
                     <span key={t}>{t}</span>
                   ))}
                 </div>
-            </article>
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>

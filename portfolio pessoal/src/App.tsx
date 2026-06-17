@@ -1,5 +1,4 @@
 import { About } from "./components/About";
-import { ScrollAnimations } from "./components/ScrollAnimations";
 import { Dogita } from "./components/Dogita";
 import { Contact } from "./components/Contact";
 import { Footer } from "./components/Footer";
@@ -18,7 +17,6 @@ export default function App() {
       <div className="bg-scanline" aria-hidden />
 
       <div className="app">
-        <ScrollAnimations />
         <Nav />
         <main>
           <Hero />
