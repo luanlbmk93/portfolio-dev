@@ -1,10 +1,15 @@
+import { useRef } from "react";
 import { profile, stats } from "../data/portfolio";
+import { HeroParallax } from "./HeroParallax";
 import { Terminal } from "./Terminal";
 
 export function Hero() {
+  const heroRef = useRef<HTMLElement>(null);
+
   return (
-    <section className="hero">
-      <div className="container hero-grid">
+    <section className="hero" ref={heroRef}>
+      <HeroParallax sectionRef={heroRef} />
+      <div className="container hero-grid hero-content">
         <div>
           <div className="hero-badge">
             <span className="dot" />
@@ -43,7 +48,9 @@ export function Hero() {
           </div>
         </div>
 
-        <Terminal />
+        <div className="hero-terminal-wrap">
+          <Terminal />
+        </div>
       </div>
     </section>
   );
