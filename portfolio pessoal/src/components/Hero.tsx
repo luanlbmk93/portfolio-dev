@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { profile, stats } from "../data/portfolio";
+import { HeroHeadline } from "./HeroHeadline";
 import { HeroParallax } from "./HeroParallax";
 import { Terminal } from "./Terminal";
 
@@ -16,13 +17,7 @@ export function Hero() {
             disponível para projetos · {profile.location}
           </div>
 
-          <h1>
-            Olá, meu nome é <span className="accent">{profile.name}</span>,
-            <br />
-            Desenvolvedor de Software
-          </h1>
-
-          <p className="hero-tagline">{profile.tagline}</p>
+          <HeroHeadline />
 
           <div className="hero-actions">
             <a href="#dogita" className="btn btn-primary">

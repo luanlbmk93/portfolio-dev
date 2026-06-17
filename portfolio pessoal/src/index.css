@@ -365,6 +365,35 @@ img {
   background-clip: text;
 }
 
+.hero-glyph {
+  font-family: var(--font-mono);
+  color: var(--cyan);
+  opacity: 0.75;
+  -webkit-text-fill-color: var(--cyan);
+}
+
+.hero h1 .accent .hero-glyph {
+  -webkit-text-fill-color: var(--green);
+  color: var(--green);
+  opacity: 0.9;
+}
+
+.hero-type-cursor {
+  display: inline-block;
+  width: 0.45em;
+  height: 0.9em;
+  margin-left: 3px;
+  vertical-align: -0.05em;
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green);
+  animation: hero-cursor-blink 0.85s step-end infinite;
+}
+
+@keyframes hero-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 .hero-tagline {
   font-size: 1.15rem;
   color: var(--text-muted);
