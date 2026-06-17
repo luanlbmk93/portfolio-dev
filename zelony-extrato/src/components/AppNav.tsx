@@ -28,8 +28,7 @@ export function AppNav({
               <FileText className="h-5 w-5 text-zelony-gold" strokeWidth={2} />
             </div>
             <div className="min-w-0">
-              <p className="font-bold text-zelony-text tracking-tight truncate">Zelony Extrato</p>
-              <p className="text-[11px] text-zelony-muted hidden sm:block">Análise de extratos bancários</p>
+              <p className="font-bold text-zelony-text tracking-tight truncate">Análise de Extratos Bancários</p>
             </div>
           </div>
 

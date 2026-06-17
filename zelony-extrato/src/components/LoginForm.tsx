@@ -33,7 +33,7 @@ export function LoginForm() {
               <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-zelony-gold/20 to-zelony-brown/40 border border-zelony-gold/30 flex items-center justify-center">
                 <FileText className="h-6 w-6 text-zelony-gold" />
               </div>
-              <span className="text-lg font-bold text-zelony-text">Zelony Extrato</span>
+              <span className="text-lg font-bold text-zelony-text">Análise de Extratos Bancários</span>
             </div>
 
             <h1 className="text-4xl xl:text-5xl font-extrabold text-zelony-text leading-[1.1] tracking-tight max-w-md">
@@ -72,8 +72,7 @@ export function LoginForm() {
                 <FileText className="h-5 w-5 text-zelony-gold" />
               </div>
               <div>
-                <p className="font-bold text-zelony-text">Zelony Extrato</p>
-                <p className="text-xs text-zelony-muted">Análise de extratos</p>
+                <p className="font-bold text-zelony-text">Análise de Extratos Bancários</p>
               </div>
             </div>
 
