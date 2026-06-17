@@ -103,4 +103,36 @@
   .zelony-alert-success {
     @apply rounded-xl border border-emerald-500/30 bg-emerald-950/30 text-emerald-200 text-sm px-4 py-3;
   }
+
+  .zelony-stat-card {
+    @apply rounded-2xl border border-zelony-border bg-zelony-surface/60 p-5
+      relative overflow-hidden transition-all hover:border-zelony-gold/20;
+  }
+
+  .zelony-stat-card::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zelony-gold/40 to-transparent;
+  }
+
+  .zelony-stat-value {
+    @apply text-2xl sm:text-3xl font-bold text-zelony-text tracking-tight;
+  }
+
+  .zelony-stat-label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.12em] text-zelony-muted;
+  }
+
+  .zelony-dropzone {
+    @apply relative rounded-2xl border-2 border-dashed border-zelony-border bg-zelony-surface/40
+      p-8 text-center transition-all duration-200
+      hover:border-zelony-gold/40 hover:bg-zelony-brown/10;
+  }
+
+  .zelony-panel-header-success {
+    @apply p-5 sm:p-6 border-b border-emerald-500/20 bg-emerald-950/20 flex justify-between items-center gap-4;
+  }
+
+  .zelony-panel-header-danger {
+    @apply p-5 sm:p-6 border-b border-red-500/20 bg-red-950/20 flex justify-between items-center gap-4;
+  }
 }

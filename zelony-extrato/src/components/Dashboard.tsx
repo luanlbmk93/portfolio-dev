@@ -37,6 +37,35 @@ const resolvedCounterparty = (t: Pick<Transaction, "description" | "counterparty
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
+const CHART_GOLD = "#d4af37";
+const CHART_GOLD_DIM = "rgba(212, 175, 55, 0.35)";
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: "#1a1a1f",
+      borderColor: "#2a2a32",
+      borderWidth: 1,
+      titleColor: "#fafafa",
+      bodyColor: "#a1a1aa",
+      padding: 12,
+      cornerRadius: 8,
+    },
+  },
+  scales: {
+    x: {
+      grid: { color: "rgba(42, 42, 50, 0.5)" },
+      ticks: { color: "#71717a" },
+    },
+    y: {
+      grid: { color: "rgba(42, 42, 50, 0.5)" },
+      ticks: { color: "#71717a", callback: (v: string | number) => `R$ ${v}` },
+    },
+  },
+};
+
 interface Transaction {
   id: string;
   date: string;
@@ -1684,16 +1713,16 @@ useEffect(() => {
     ) : (
       <>
     {role === "admin" && (
-      <div className="bg-zelony-card rounded-2xl border border-zelony-border p-6 mb-8 shadow-sm">
-        <div className="flex items-center justify-between gap-4 mb-4">
+      <div className="zelony-card p-6 mb-8">
+        <div className="flex items-center justify-between gap-4 mb-5">
           <div>
-            <h2 className="text-xl font-bold text-zelony-text">Gestão de Acesso</h2>
-            <p className="text-sm text-zelony-muted">Criar/remover contas de admins e analistas.</p>
+            <h2 className="zelony-section-title text-lg">Gestão de Acesso</h2>
+            <p className="text-sm text-zelony-muted mt-1">Criar e remover contas de admins e analistas.</p>
           </div>
           <button
             onClick={refreshAdminUsers}
             disabled={adminBusy}
-            className="px-4 py-2 rounded-lg bg-zelony-surface hover:bg-zelony-border text-zelony-text font-semibold disabled:opacity-50"
+            className="zelony-btn-secondary disabled:opacity-50"
           >
             {adminBusy ? "Carregando..." : "Atualizar lista"}
           </button>
@@ -1704,19 +1733,19 @@ useEffect(() => {
             value={newUserEmail}
             onChange={(e) => setNewUserEmail(e.target.value)}
             placeholder="email do usuário"
-            className="px-3 py-2 border border-zelony-border rounded-lg"
+            className="zelony-input !py-2.5"
           />
           <input
             value={newUserPassword}
             onChange={(e) => setNewUserPassword(e.target.value)}
             placeholder="senha (mín. 8)"
             type="password"
-            className="px-3 py-2 border border-zelony-border rounded-lg"
+            className="zelony-input !py-2.5"
           />
           <select
             value={newUserRole}
             onChange={(e) => setNewUserRole(e.target.value as any)}
-            className="px-3 py-2 border border-zelony-border rounded-lg bg-zelony-card"
+            className="zelony-input !py-2.5"
           >
             <option value="analyst">analista</option>
             <option value="admin">admin</option>
@@ -1724,22 +1753,22 @@ useEffect(() => {
           <button
             onClick={adminCreateUser}
             disabled={adminBusy}
-            className="zelony-btn-primary !py-2 !px-4 disabled:opacity-50"
+            className="zelony-btn-primary disabled:opacity-50"
           >
             Cadastrar
           </button>
         </div>
 
-        <div className="overflow-x-auto border border-zelony-border rounded-xl">
-          <table className="w-full">
-            <thead className="bg-zelony-surface">
+        <div className="overflow-x-auto rounded-xl border border-zelony-border">
+          <table className="zelony-table">
+            <thead>
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-bold text-zelony-muted uppercase">Email</th>
-                <th className="px-4 py-3 text-left text-xs font-bold text-zelony-muted uppercase">Tipo</th>
-                <th className="px-4 py-3 text-right text-xs font-bold text-zelony-muted uppercase">Ação</th>
+                <th>Email</th>
+                <th>Tipo</th>
+                <th className="text-right">Ação</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zelony-border-subtle">
+            <tbody>
               {adminUsers.map((u) => (
                 <tr key={u.id}>
                   <td className="px-4 py-3 text-sm text-zelony-text">{u.email || u.id}</td>
@@ -2178,19 +2207,19 @@ useEffect(() => {
         {transactions.length > 0 && (
           <button 
             onClick={handleToggleReport}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-sm ${
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all ${
               showReport 
-              ? 'bg-gray-900 text-zelony-bg hover:bg-gray-800' 
-              : 'bg-zelony-brown/20 text-zelony-gold hover:bg-zelony-brown/30 border border-zelony-border'
+              ? 'zelony-btn-secondary !border-zelony-gold/40 !text-zelony-gold !bg-zelony-gold/10' 
+              : 'zelony-btn-primary shadow-gold'
             }`}
           >
             <BarChart3 className="w-5 h-5" /> 
-            {showReport ? 'VISUALIZAR TABELAS' : 'GERAR RELATÓRIO ANALÍTICO'}
+            {showReport ? 'Visualizar tabelas' : 'Gerar relatório analítico'}
           </button>
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 p-2 bg-zelony-surface rounded-2xl border border-dashed border-zelony-border">
+      <div className="flex flex-col sm:flex-row gap-4 items-stretch">
         <div className="flex-1 relative group">
           <input
             type="file"
@@ -2199,33 +2228,37 @@ useEffect(() => {
             onChange={handleFileChange}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
           />
-          <div className="bg-zelony-card border border-zelony-border rounded-xl px-4 py-4 flex items-center justify-center gap-3 group-hover:border-zelony-gold/50 transition-colors">
-            <div className="bg-zelony-surface p-2 rounded-lg text-zelony-muted group-hover:text-zelony-gold group-hover:bg-zelony-brown/20 transition-colors">
-               <FileText className="w-5 h-5" />
+          <div className="zelony-dropzone h-full min-h-[88px] flex flex-col items-center justify-center gap-2 group-hover:shadow-gold-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zelony-brown/20 border border-zelony-gold/20 text-zelony-gold group-hover:scale-105 transition-transform">
+               <Upload className="w-6 h-6" />
             </div>
-            <span className="text-sm font-medium text-zelony-muted">
+            <span className="text-sm font-medium text-zelony-text-secondary">
               {files.length === 0
                 ? fileHint
                 : files.length === 1
                   ? files[0].name
                   : `${files.length} arquivos selecionados`}
             </span>
+            <span className="text-xs text-zelony-muted">PDF · arraste ou clique para selecionar</span>
           </div>
         </div>
 
         <button
           onClick={handleUpload}
           disabled={files.length === 0 || loading}
-          className="relative overflow-hidden px-8 py-4 bg-zelony-gold text-zelony-bg rounded-xl font-bold text-sm hover:bg-zelony-gold-hover transition-all disabled:opacity-50 disabled:grayscale shadow-lg shadow-gold active:scale-95"
+          className="zelony-btn-primary !px-8 !py-4 !text-sm sm:min-w-[200px] shadow-gold disabled:opacity-50 disabled:grayscale"
         >
-          <span className="relative z-10 flex items-center justify-center gap-2">
+          <span className="flex items-center justify-center gap-2">
             {loading ? (
               <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-zelony-bg/30 border-t-zelony-bg rounded-full animate-spin" />
                 {loadingText}
               </>
             ) : (
-              'ANALISAR DOCUMENTO(S)'
+              <>
+                <Sparkles size={16} />
+                Analisar documento(s)
+              </>
             )}
           </span>
         </button>
@@ -2252,85 +2285,85 @@ useEffect(() => {
 
 {showReport && reportMetrics && (
 
-<div id="report-content" className="bg-zelony-card p-8 rounded-xl shadow">
+<div id="report-content" className="zelony-card p-6 sm:p-8 mb-8 animate-fade-in">
 
-<div className="flex justify-between items-start mb-6">
+<div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8 pb-6 border-b border-zelony-border-subtle">
 <div>
-<h1 className="text-3xl font-bold">
+<h1 className="text-2xl sm:text-3xl font-bold text-zelony-text tracking-tight">
 Relatório Financeiro Unificado
 </h1>
-<p className="text-zelony-muted">
-Titular do extrato: <span className="font-semibold text-zelony-text">{statementOwnerName || "—"}</span>
+<p className="text-zelony-muted mt-2">
+Titular do extrato: <span className="font-semibold text-zelony-gold">{statementOwnerName || "—"}</span>
 </p>
-<p className="text-zelony-muted text-sm">
-Analista (login): {user?.email}
+<p className="text-zelony-muted text-sm mt-1">
+Analista: {user?.email}
 </p>
 </div>
 
-<div className="flex items-center gap-2">
+<div className="flex items-center gap-2 shrink-0">
   <button
     onClick={downloadExcel}
-    className="px-4 py-2 bg-emerald-600 text-zelony-bg rounded-lg hover:bg-emerald-700 flex items-center gap-2"
+    className="zelony-btn-secondary !border-emerald-500/30 !text-emerald-400 hover:!bg-emerald-500/10"
   >
     <FileSpreadsheet className="w-4 h-4" />
-    Baixar Excel
+    Excel
   </button>
   <button
     onClick={downloadPDF}
-    className="px-4 py-2 bg-zelony-gold text-zelony-bg rounded-lg hover:bg-zelony-gold-hover flex items-center gap-2"
+    className="zelony-btn-primary"
   >
     <FileText className="w-4 h-4" />
-    Baixar PDF
+    PDF
   </button>
 </div>
 </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-  <div className="rounded-xl border border-slate-200/80 bg-zelony-card p-5 shadow-sm">
-    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Renda total (válida)</p>
-    <p className="text-2xl font-bold text-slate-900">R$ {money(reportMetrics.total)}</p>
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+  <div className="zelony-stat-card">
+    <p className="zelony-stat-label">Renda total (válida)</p>
+    <p className="zelony-stat-value mt-2">R$ {money(reportMetrics.total)}</p>
   </div>
-  <div className="rounded-xl border border-slate-200/80 bg-zelony-card p-5 shadow-sm">
-    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Média mensal (todos os meses)</p>
-    <p className="text-2xl font-bold text-slate-900">R$ {money(monthAverage)}</p>
+  <div className="zelony-stat-card">
+    <p className="zelony-stat-label">Média mensal (todos os meses)</p>
+    <p className="zelony-stat-value mt-2">R$ {money(monthAverage)}</p>
   </div>
-  <div className="rounded-xl border border-slate-200/80 bg-zelony-card p-5 shadow-sm sm:col-span-2 lg:col-span-1">
-    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Melhor mês</p>
-    <p className="text-2xl font-bold text-slate-900">R$ {money(bestMonth)}</p>
+  <div className="zelony-stat-card sm:col-span-2 lg:col-span-1">
+    <p className="zelony-stat-label">Melhor mês</p>
+    <p className="zelony-stat-value mt-2 text-zelony-gold">R$ {money(bestMonth)}</p>
   </div>
 </div>
 
 {yearlyStats.length > 0 && (
   <div className="mb-8">
-    <h3 className="text-sm font-bold uppercase tracking-wide text-slate-500 mb-3">Média por ano (IR vs extrato)</h3>
+    <h3 className="zelony-stat-label mb-4">Média por ano (IR vs extrato)</h3>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {yearlyStats.map((ys) => (
         <div
           key={ys.year}
-          className="rounded-xl border border-emerald-500/20 bg-emerald-950/25 p-5 shadow-sm"
+          className="zelony-stat-card !border-emerald-500/20 !bg-emerald-950/15"
         >
-          <p className="text-xs font-semibold text-emerald-800">Média mensal em {ys.year}</p>
-          <p className="text-2xl font-bold text-emerald-900">R$ {money(ys.monthAverage)}</p>
-          <p className="text-xs text-emerald-300/90 mt-2">
+          <p className="text-xs font-semibold text-emerald-400">Média mensal em {ys.year}</p>
+          <p className="text-2xl font-bold text-emerald-300 mt-1">R$ {money(ys.monthAverage)}</p>
+          <p className="text-xs text-emerald-400/70 mt-2">
             {ys.monthsWithData} {ys.monthsWithData === 1 ? "mês" : "meses"} com movimento · total R${" "}
             {money(ys.yearTotal)}
           </p>
         </div>
       ))}
     </div>
-    <p className="text-xs text-slate-500 mt-3">
+    <p className="text-xs text-zelony-muted mt-3">
       Compare a média do ano com o valor declarado no IR: diferenças grandes podem indicar inconsistência.
     </p>
   </div>
 )}
 
 {moneyOriginSummary && (
-  <div className="mb-10 rounded-xl border border-zelony-border bg-zelony-brown/20/50 p-6 shadow-sm">
-    <h3 className="text-sm font-bold uppercase tracking-wide text-zelony-gold mb-2">
+  <div className="mb-10 rounded-2xl border border-zelony-gold/20 bg-zelony-brown/10 p-6">
+    <h3 className="zelony-stat-label !text-zelony-gold mb-3">
       De quem veio o dinheiro (maior origem)
     </h3>
     {moneyOriginSummary.unidentified ? (
-      <p className="text-slate-800 leading-relaxed">
+      <p className="text-zelony-text-secondary leading-relaxed text-sm">
         No modo <span className="font-semibold">sem IA</span>, o nome só aparece se o PDF trouxer na descrição (ex.{" "}
         <span className="font-mono text-sm">REM: NOME</span> no Bradesco,{" "}
         <span className="font-mono text-sm">Cp: …-NOME</span> no Inter, ou nome após “Pix recebido”). Se o banco só
@@ -2343,7 +2376,7 @@ Analista (login): {user?.email}
         {moneyOriginSummary.sharePct.toFixed(1)}% do válido).
       </p>
     ) : (
-      <p className="text-slate-800 leading-relaxed">
+      <p className="text-zelony-text-secondary leading-relaxed text-sm">
         Somando créditos da mesma origem, quem mais enviou dinheiro para{" "}
         <span className="font-semibold">{statementOwnerName || "o titular"}</span> foi{" "}
         <span className="font-semibold text-amber-100">{moneyOriginSummary.topKey}</span>, totalizando{" "}
@@ -2351,21 +2384,21 @@ Analista (login): {user?.email}
         {moneyOriginSummary.sharePct.toFixed(1)}% do total válido).
       </p>
     )}
-    <div className="mt-4 overflow-x-auto rounded-lg border border-zelony-border bg-zelony-card">
-      <table className="w-full text-sm">
+    <div className="mt-4 overflow-x-auto rounded-xl border border-zelony-border">
+      <table className="zelony-table">
         <thead>
-          <tr className="bg-zelony-brown/20/80 text-left text-amber-100">
-            <th className="p-3 font-semibold">Origem (pessoa / empresa)</th>
-            <th className="p-3 font-semibold text-right">Valor</th>
-            <th className="p-3 font-semibold text-right">%</th>
+          <tr className="!bg-zelony-brown/20">
+            <th>Origem (pessoa / empresa)</th>
+            <th className="text-right">Valor</th>
+            <th className="text-right">%</th>
           </tr>
         </thead>
         <tbody>
           {moneyOriginSummary.topSources.map((row) => (
-            <tr key={row.name} className="border-t border-zelony-border">
-              <td className="p-3 text-slate-800">{row.name}</td>
-              <td className="p-3 text-right font-medium">R$ {money(row.amount)}</td>
-              <td className="p-3 text-right text-slate-600">{row.pct.toFixed(1)}%</td>
+            <tr key={row.name}>
+              <td className="!text-zelony-text">{row.name}</td>
+              <td className="text-right font-medium !text-zelony-gold">R$ {money(row.amount)}</td>
+              <td className="text-right !text-zelony-muted">{row.pct.toFixed(1)}%</td>
             </tr>
           ))}
         </tbody>
@@ -2375,42 +2408,42 @@ Analista (login): {user?.email}
 )}
 
 {excludedSummaryStats.length > 0 && (
-  <div className="mb-10 rounded-xl border border-red-500/150/20 bg-red-950/25 p-6 shadow-sm">
-    <h3 className="text-sm font-bold uppercase tracking-wide text-red-900 mb-2">
+  <div className="mb-10 rounded-2xl border border-red-500/20 bg-red-950/15 p-6">
+    <h3 className="zelony-stat-label !text-red-400 mb-2">
       Resumo dos desconsiderados (por motivo)
     </h3>
-    <p className="text-sm text-red-900/80 mb-4">
+    <p className="text-sm text-red-300/80 mb-4">
       Valores e quantidades das linhas que não entram nas entradas válidas, agrupadas pelo motivo.
     </p>
-    <div className="overflow-x-auto rounded-lg border border-red-100 bg-zelony-card">
-      <table className="w-full text-sm">
+    <div className="overflow-x-auto rounded-xl border border-red-500/15">
+      <table className="zelony-table">
         <thead>
-          <tr className="bg-red-950/30 text-left">
-            <th className="p-3 font-semibold text-red-950">Motivo</th>
-            <th className="p-3 font-semibold text-red-950 text-right">Qtd.</th>
-            <th className="p-3 font-semibold text-red-950 text-right">Total R$</th>
+          <tr className="!bg-red-950/30">
+            <th className="!text-red-300">Motivo</th>
+            <th className="text-right !text-red-300">Qtd.</th>
+            <th className="text-right !text-red-300">Total R$</th>
           </tr>
         </thead>
         <tbody>
           {excludedSummaryStats.map((row) => (
-            <tr key={row.reason} className="border-t border-red-500/15">
-              <td className="p-3 text-slate-800">{row.reason}</td>
-              <td className="p-3 text-right">{row.count}</td>
-              <td className="p-3 text-right font-medium">R$ {money(row.total)}</td>
+            <tr key={row.reason}>
+              <td className="!text-zelony-text-secondary">{row.reason}</td>
+              <td className="text-right">{row.count}</td>
+              <td className="text-right font-medium !text-red-300">R$ {money(row.total)}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
     <div className="mt-4">
-      <p className="text-xs font-semibold text-slate-600 mb-2">Exemplos de descrições (amostra)</p>
-      <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
+      <p className="text-xs font-semibold text-zelony-muted mb-2">Exemplos de descrições (amostra)</p>
+      <ul className="text-xs text-zelony-text-secondary space-y-1 list-disc list-inside">
         {excludedSummaryStats
           .flatMap((row) => row.samples.map((s, i) => ({ row, s, i })))
           .slice(0, 8)
           .map(({ row, s, i }) => (
             <li key={`${row.reason}-${i}-${s.slice(0, 12)}`}>
-              <span className="text-slate-500">[{row.reason.slice(0, 40)}]</span> {s}
+              <span className="text-zelony-muted">[{row.reason.slice(0, 40)}]</span> {s}
             </li>
           ))}
       </ul>
@@ -2424,29 +2457,29 @@ Analista (login): {user?.email}
 </div>
 
 
-<h2 className="text-xl font-semibold mb-4">
+<h2 className="zelony-section-title text-lg mb-4">
 Resumo Geral
 </h2>
 
-<div className="grid grid-cols-3 gap-6 mb-10">
+<div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
 
-<div>
-<p className="text-zelony-muted text-sm">RENDA TOTAL</p>
-<p className="text-2xl font-bold">
+<div className="zelony-stat-card">
+<p className="zelony-stat-label">Renda total</p>
+<p className="zelony-stat-value mt-1">
 R$ {money(reportMetrics.total)}
 </p>
 </div>
 
-<div>
-<p className="text-zelony-muted text-sm">MÉDIA MENSAL (TODOS OS MESES)</p>
-<p className="text-2xl font-bold">
+<div className="zelony-stat-card">
+<p className="zelony-stat-label">Média mensal</p>
+<p className="zelony-stat-value mt-1">
 R$ {money(monthAverage)}
 </p>
 </div>
 
-<div>
-<p className="text-zelony-muted text-sm">MELHOR MÊS</p>
-<p className="text-2xl font-bold">
+<div className="zelony-stat-card">
+<p className="zelony-stat-label">Melhor mês</p>
+<p className="zelony-stat-value mt-1 text-zelony-gold">
 R$ {money(bestMonth)}
 </p>
 </div>
@@ -2455,27 +2488,23 @@ R$ {money(bestMonth)}
 
 
 
-<h2 className="text-xl font-semibold mb-4">
+<h2 className="zelony-section-title text-lg mb-4">
 Evolução da Renda
 </h2>
 
-<div className="w-full">
+<div className="w-full rounded-2xl border border-zelony-border bg-zelony-surface/40 p-4 sm:p-6">
   {monthlyLabels.length <= 1 ? (
     <div className="h-64">
       <Bar
-        options={{
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { ticks: { callback: (v) => `R$ ${v}` } } }
-        }}
+        options={chartOptions}
         data={{
           labels: monthlyLabels.map(formatMonthKey),
           datasets: [
             {
               label: "Renda",
               data: monthlyValues,
-              backgroundColor: "#4f46e5"
+              backgroundColor: CHART_GOLD,
+              borderRadius: 6,
             }
           ]
         }}
@@ -2485,20 +2514,19 @@ Evolução da Renda
     <div className="space-y-8">
       {monthlySeries.map((s) => (
         <div key={s.monthKey}>
-          <div className="flex items-baseline justify-between mb-2">
+          <div className="flex items-baseline justify-between mb-3">
             <h3 className="font-semibold text-zelony-text">Mês {formatMonthKey(s.monthKey)}</h3>
-            <p className="text-sm text-zelony-muted">Soma: R$ {money(s.values.reduce((a, b) => a + b, 0))}</p>
+            <p className="text-sm text-zelony-gold font-medium">Soma: R$ {money(s.values.reduce((a, b) => a + b, 0))}</p>
           </div>
           <div className="h-64">
             <Bar
               options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                ...chartOptions,
                 scales: {
-                  x: { title: { display: true, text: "Dia" } },
-                  y: { title: { display: true, text: "R$" } }
-                }
+                  ...chartOptions.scales,
+                  x: { ...chartOptions.scales.x, title: { display: true, text: "Dia", color: "#71717a" } },
+                  y: { ...chartOptions.scales.y, title: { display: true, text: "R$", color: "#71717a" } },
+                },
               }}
               data={{
                 labels: s.labels,
@@ -2506,7 +2534,10 @@ Evolução da Renda
                   {
                     label: "Renda diária (somada)",
                     data: s.values,
-                    backgroundColor: "#4f46e5"
+                    backgroundColor: CHART_GOLD_DIM,
+                    borderColor: CHART_GOLD,
+                    borderWidth: 1,
+                    borderRadius: 4,
                   }
                 ]
               }}
@@ -2520,18 +2551,19 @@ Evolução da Renda
 
 
 
-<h2 className="text-xl font-semibold mt-10 mb-4">
+<h2 className="zelony-section-title text-lg mt-10 mb-4">
 Transações
 </h2>
 
-<table className="w-full border">
+<div className="overflow-x-auto rounded-xl border border-zelony-border">
+<table className="zelony-table">
 
 <thead>
-<tr className="bg-zelony-surface">
-<th className="p-3 text-left">Data</th>
-<th className="p-3 text-left">Descrição</th>
-<th className="p-3 text-left">Pessoa (Parentesco)</th>
-<th className="p-3 text-right">Valor</th>
+<tr>
+<th>Data</th>
+<th>Descrição</th>
+<th>Pessoa (Parentesco)</th>
+<th className="text-right">Valor</th>
 </tr>
 </thead>
 
@@ -2540,10 +2572,10 @@ Transações
 {validIncomes.map((t) => {
   const cp = resolvedCounterparty(t);
   return (
-<tr key={t.id} className="border-t">
-<td className="p-3">{t.date}</td>
-<td className="p-3">{t.description}</td>
-<td className="p-3">
+<tr key={t.id}>
+<td>{t.date}</td>
+<td>{t.description}</td>
+<td>
   {(t.personName || "").trim() ? (
     `${t.personName}${(t.relationship || "").trim() ? ` (${t.relationship})` : ""}`
   ) : cp ? (
@@ -2551,10 +2583,10 @@ Transações
       {cp}
     </span>
   ) : (
-    <span className="text-amber-700 text-sm">—</span>
+    <span className="text-zelony-muted text-sm">—</span>
   )}
 </td>
-<td className="p-3 text-right">
+<td className="text-right font-medium text-emerald-400">
 R$ {money(t.amount)}
 </td>
 </tr>
@@ -2564,6 +2596,7 @@ R$ {money(t.amount)}
 </tbody>
 
 </table>
+</div>
 
 
 <p className="text-sm text-zelony-muted mt-6 text-center">
@@ -2581,19 +2614,21 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
 
         {!showReport && transactions.length > 0 && (
           <>
-            <div className="bg-zelony-card rounded-xl shadow-sm p-6 mb-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Filter className="w-5 h-5" />
-                <h2 className="text-xl font-semibold">Filtros de Bloqueio</h2>
+            <div className="zelony-card p-6 mb-6">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="p-2 rounded-lg bg-zelony-brown/20 border border-zelony-gold/20">
+                  <Filter className="w-5 h-5 text-zelony-gold" />
+                </div>
+                <h2 className="zelony-section-title text-lg">Filtros de Bloqueio</h2>
               </div>
 
-              <div className="mb-4">
-                <div className="flex items-center justify-between gap-4 mb-2">
-                  <p className="text-sm font-semibold text-zelony-text-secondary">Pessoas a desconsiderar</p>
+              <div className="mb-5">
+                <div className="flex items-center justify-between gap-4 mb-3">
+                  <p className="zelony-label !mb-0">Pessoas a desconsiderar</p>
                   <button
                     type="button"
                     onClick={addIgnoredPersonField}
-                    className="text-xs px-3 py-2 rounded-md bg-zelony-surface hover:bg-zelony-border text-zelony-text-secondary flex items-center gap-2"
+                    className="zelony-btn-ghost !text-xs"
                     title="Adicionar mais um campo"
                   >
                     <Plus className="w-4 h-4" />
@@ -2607,7 +2642,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                       value={p}
                       onChange={(e) => setIgnoredPersonAt(idx, e.target.value)}
                       placeholder={`Pessoa ${idx + 1} (ex: João, Maria)`}
-                      className="w-full px-3 py-2 border border-zelony-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="zelony-input !py-2.5"
                     />
                   ))}
                 </div>
@@ -2616,57 +2651,57 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex flex-wrap gap-2 mb-5">
                 {EXCLUDE_KEYWORDS.map((keyword) => (
                   <button
                     key={keyword}
                     onClick={() => toggleFilter(keyword)}
-                    className={`px-4 py-2 rounded-lg font-medium transition ${
-                      activeFilters.has(keyword) ? 'bg-red-600 text-zelony-bg' : 'bg-zelony-surface text-zelony-text-secondary hover:bg-zelony-border'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                      activeFilters.has(keyword) ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'zelony-btn-secondary !py-1.5 !px-3 !text-xs'
                     }`}
                   >
-                    {activeFilters.has(keyword) && <X className="w-4 h-4 inline mr-1" />}
-                    Ignorar: {keyword}
+                    {activeFilters.has(keyword) && <X className="w-3 h-3 inline mr-1" />}
+                    {keyword}
                   </button>
                 ))}
               </div>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zelony-muted w-5 h-5" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-zelony-muted w-5 h-5" />
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Buscar transações..."
-                  className="w-full pl-10 pr-4 py-3 border border-zelony-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="zelony-input !pl-11"
                 />
               </div>
             </div>
 
-            <div className="bg-zelony-card rounded-xl shadow-sm overflow-hidden mb-6 border-l-4 border-green-500">
-<div className="p-6 border-b flex justify-between items-center bg-green-50/30">
+            <div className="zelony-card overflow-hidden mb-6 border-l-4 border-l-emerald-500/60">
+<div className="zelony-panel-header-success">
   <div>
-    <h2 className="text-xl font-semibold text-green-800">Entradas Válidas</h2>
-    <p className="text-2xl font-black text-green-600">
+    <h2 className="text-lg font-bold text-emerald-300">Entradas Válidas</h2>
+    <p className="text-2xl sm:text-3xl font-bold text-emerald-400 mt-1">
       R$ {totalSum.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
     </p>
   </div>
-                <span className="font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full text-sm">
+                <span className="zelony-badge-gold !text-emerald-400 !bg-emerald-500/10 !border-emerald-500/30">
                   {validIncomes.length} itens
                 </span>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-zelony-surface">
+                <table className="zelony-table">
+                  <thead>
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-zelony-muted uppercase tracking-wider">Data</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-zelony-muted uppercase tracking-wider">Descrição</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-zelony-muted uppercase tracking-wider">Pessoa</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-zelony-muted uppercase tracking-wider">Parentesco</th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-zelony-muted uppercase tracking-wider">Valor</th>
-                      <th className="px-6 py-3 text-center text-xs font-medium text-zelony-muted uppercase tracking-wider">Ação</th>
+                      <th>Data</th>
+                      <th>Descrição</th>
+                      <th>Pessoa</th>
+                      <th>Parentesco</th>
+                      <th className="text-right">Valor</th>
+                      <th className="text-center">Ação</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zelony-border-subtle">
+                  <tbody>
                     {validIncomes.map((t) => {
                       const cp = resolvedCounterparty(t);
                       return (
@@ -2699,13 +2734,13 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                             ))}
                           </select>
                         </td>
-                        <td className="px-6 py-4 text-sm text-right font-medium text-green-600">
+                        <td className="text-right font-medium text-emerald-400">
                           + R$ {t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="text-center">
                           <button
                             onClick={() => toggleTransactionState(t.id)}
-                            className="text-xs px-3 py-1 bg-zelony-card border border-red-500/150/30 text-red-400 rounded-md hover:bg-red-500/10 transition"
+                            className="text-xs px-3 py-1.5 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition"
                             title="Mover para excluídos"
                           >
                             Remover
@@ -2722,19 +2757,19 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
               </div>
             </div>
 
-            <div className="bg-zelony-card rounded-xl shadow-sm overflow-hidden border-l-4 border-red-500/150">
-              <div className="p-6 border-b flex justify-between items-center bg-red-50/50">
+            <div className="zelony-card overflow-hidden border-l-4 border-l-red-500/50">
+              <div className="zelony-panel-header-danger">
                 <div>
-                  <h2 className="text-xl font-semibold text-red-900">Transações inválidas / ignoradas</h2>
-                  <p className="text-sm text-red-800/80">A IA errou? Restaure uma transação clicando no botão ao lado.</p>
+                  <h2 className="text-lg font-bold text-red-300">Transações inválidas / ignoradas</h2>
+                  <p className="text-sm text-red-400/70 mt-1">A IA errou? Restaure uma transação clicando no botão ao lado.</p>
                 </div>
-                <span className="font-bold text-red-800 bg-red-100 px-3 py-1 rounded-full text-sm">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/15 text-red-300 border border-red-500/25">
                   {excludedOrDebits.length} itens
                 </span>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-red-950/30">
+                <table className="zelony-table">
+                  <thead>
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-zelony-muted uppercase tracking-wider">Data</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-zelony-muted uppercase tracking-wider">Descrição</th>
@@ -2790,7 +2825,7 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
                           <td className="px-6 py-4 text-sm text-right font-medium text-zelony-muted">
                             R$ {t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                           </td>
-                          <td className="px-6 py-4 text-sm text-orange-600">{motivo}</td>
+                          <td className="text-sm text-amber-400/90">{motivo}</td>
                           <td className="px-6 py-4 text-center">
                             <button
                               onClick={() => toggleTransactionState(t.id)}
@@ -2813,29 +2848,31 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
     )}
 
         {showPasswordModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-zelony-card rounded-2xl p-6 w-full max-w-md shadow-2xl">
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-zelony-text">
-                <Lock className="text-zelony-gold" /> Alterar Senha
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-fade-in">
+            <div className="zelony-card p-6 sm:p-8 w-full max-w-md shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zelony-gold/60 to-transparent" />
+              <h2 className="text-xl font-bold mb-1 flex items-center gap-2 text-zelony-text">
+                <Lock className="text-zelony-gold" size={20} /> Alterar Senha
               </h2>
+              <p className="text-sm text-zelony-muted mb-5">Mínimo de 8 caracteres</p>
               <input
                 type="password"
-                placeholder="Nova senha (mín. 8 caracteres)"
-                className="w-full px-4 py-3 border border-zelony-border rounded-xl mb-4 focus:ring-2 focus:ring-zelony-gold/50 outline-none text-zelony-text"
+                placeholder="Nova senha"
+                className="zelony-input mb-5"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowPasswordModal(false)}
-                  className="flex-1 px-4 py-2 bg-zelony-surface text-zelony-text-secondary rounded-lg font-semibold hover:bg-zelony-border transition-colors"
+                  className="zelony-btn-secondary flex-1"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleUpdatePassword}
                   disabled={loadingPassword}
-                  className="flex-1 px-4 py-2 bg-zelony-gold text-zelony-bg rounded-lg font-semibold hover:bg-zelony-gold-hover transition-colors disabled:opacity-50"
+                  className="zelony-btn-primary flex-1 disabled:opacity-50"
                 >
                   {loadingPassword ? "Salvando..." : "Confirmar"}
                 </button>
@@ -2845,15 +2882,15 @@ Gerado em: {new Date().toLocaleDateString("pt-BR")}
         )}
 
         {activePage === "dashboard" && (
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-emerald-900/50 bg-emerald-950/30 px-5 py-4 text-sm text-emerald-200">
-            <p className="text-center sm:text-left">
-              Precisa de ajuda com a aplicação de extratos bancários? Nosso suporte responde pelo WhatsApp.
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-zelony-border bg-zelony-surface/50 px-5 py-4">
+            <p className="text-sm text-zelony-text-secondary text-center sm:text-left">
+              Dúvidas sobre extratos? Nosso suporte responde pelo WhatsApp.
             </p>
             <a
               href={WHATSAPP_SUPPORT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 font-semibold text-zelony-bg hover:bg-emerald-700 transition-colors"
+              className="zelony-btn-secondary !border-emerald-500/30 !text-emerald-400 hover:!bg-emerald-500/10 shrink-0"
             >
               <MessageCircle size={18} />
               Abrir WhatsApp
