@@ -16,7 +16,9 @@ export function LoginForm() {
     setLoading(true);
 
     const { error: signInError } = await signIn(email, password);
-    if (signInError) setError('Email ou senha inválidos');
+    if (signInError) {
+      setError(signInError.message || 'Email ou senha inválidos');
+    }
     setLoading(false);
   };
 
