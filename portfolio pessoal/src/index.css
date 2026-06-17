@@ -274,9 +274,9 @@ img {
 .hero {
   position: relative;
   z-index: 1;
-  min-height: 160vh;
+  min-height: 100vh;
   padding-top: var(--nav-h);
-  padding-bottom: 4rem;
+  padding-bottom: 0;
   background: var(--bg);
 }
 
