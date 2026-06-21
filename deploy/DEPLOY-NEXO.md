@@ -9,6 +9,7 @@ Sua VPS roda o stack **Nexo** — `nexo-web` controla **80/443**.
 Internet → nexo-web (80/443) ──proxy──► odevcwb-web (nginx interno)
                                               ├── /                    portfolio
                                               ├── /separadorpdf/       PDF Tools
+                                              ├── /wpp-links/          WhatsApp Links
                                               ├── /disparador-gmail/   frontend
                                               └── /disparador-gmail/api/ → odevcwb-api:3100
 
@@ -54,6 +55,7 @@ Ou na VPS, script pronto:
 ```bash
 cd /root/odevcwb-src && git pull
 bash deploy/docker/update-portfolio.sh
+bash deploy/docker/update-wpp-links.sh
 ```
 
 > **Importante:** o site em produção serve `portfolio/dist/`, **não** o código em `portfolio pessoal/src/`.  
@@ -83,6 +85,7 @@ Estrutura final:
   nginx-odevcwb-internal.conf
   portfolio/dist/
   separador/dist/
+  wpp-links/dist/
   disparador-gmail/client/dist/
   disparador-gmail/.env
 ```
@@ -191,6 +194,7 @@ Aponte `odevcwb.com` e `www.odevcwb.com` para o IP da VPS.
 - [ ] Site Nexo original ainda abre no domínio dele
 - [ ] `https://odevcwb.com/` → portfolio
 - [ ] `https://odevcwb.com/separadorpdf/` → PDF Tools
+- [ ] `https://odevcwb.com/wpp-links/` → WhatsApp Links
 - [ ] `https://odevcwb.com/disparador-gmail/` → disparador
 
 ---

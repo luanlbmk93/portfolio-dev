@@ -42,6 +42,16 @@ server {
         try_files $uri $uri/ /separadorpdf/index.html;
     }
 
+    # --- WhatsApp Links (100% estático) ---
+    location = /wpp-links {
+        return 301 /wpp-links/;
+    }
+
+    location /wpp-links/ {
+        alias /var/www/odevcwb/wpp-links/dist/;
+        try_files $uri $uri/ /wpp-links/index.html;
+    }
+
     # --- Disparador Gmail — frontend estático ---
     location = /disparador-gmail {
         return 301 /disparador-gmail/;

@@ -7,6 +7,7 @@ services:
       - ./nginx-odevcwb-internal.conf:/etc/nginx/conf.d/default.conf:ro
       - ./portfolio/dist:/usr/share/nginx/html/portfolio:ro
       - ./separador/dist:/usr/share/nginx/html/separadorpdf:ro
+      - ./wpp-links/dist:/usr/share/nginx/html/wpp-links:ro
       - ./disparador-gmail/client/dist:/usr/share/nginx/html/disparador-gmail:ro
     networks:
       - nexo

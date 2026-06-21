@@ -16,6 +16,7 @@ Ver **`deploy/DEPLOY-NEXO.md`** — stack isolado `odevcwb-web` + `odevcwb-api`,
 |-----|-----|-----------|
 | `odevcwb.com/` | Portfolio pessoal | **Nginx estático** |
 | `odevcwb.com/separadorpdf/` | PDF Tools | **Nginx estático** |
+| `odevcwb.com/wpp-links/` | WhatsApp Links | **Nginx estático** |
 | `odevcwb.com/disparador-gmail/` | Disparador Gmail | **Nginx estático** + **Node só na API** (porta **3100**) |
 
 > **Regra de ouro:** não edite o Nginx/PM2 do site que já existe. Só **adicione** um server block novo para `odevcwb.com` e um processo PM2 novo na porta **3100**.
